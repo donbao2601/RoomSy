@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#FBF7EE;}
+  body{font-family:'Be Vietnam Pro',system-ui,-apple-system,sans-serif;}
+  input::placeholder,textarea::placeholder{color:#8D9280;}
+  button{font-family:inherit;}
+  img{display:block;}
+  @keyframes rmsFadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  @keyframes rmsToast{0%{opacity:0;transform:translate(-50%,10px);}10%{opacity:1;transform:translate(-50%,0);}90%{opacity:1;transform:translate(-50%,0);}100%{opacity:0;transform:translate(-50%,10px);}}
+</style>
+</helmet>
+<div style="font-family:'Be Vietnam Pro',system-ui,-apple-system,sans-serif;background:#FBF7EE;min-height:100vh;color:#1A2410;">
+
+  <header style="position:sticky;top:0;z-index:50;background:#3F4A1F;">
+    <div style="max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 24px;height:72px;">
+      <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;padding:0;">
+        <span style="width:36px;height:36px;border-radius:10px;background:#fff;display:grid;place-items:center;flex-shrink:0;">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        </span>
+        <span style="font-weight:800;font-size:20px;color:#fff;letter-spacing:-0.3px;">Roomsy</span>
+      </button>
+
+      <sc-if value="{{ showDesktopNav }}" hint-placeholder-val="{{ true }}">
+        <nav style="display:flex;align-items:center;gap:28px;">
+          <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="4">
+            <button onClick="{{ item.onClick }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;padding:0;white-space:nowrap;">
+              <sc-if value="{{ item.active }}" hint-placeholder-val="{{ false }}">
+                <span style="font-weight:700;color:#fff;white-space:nowrap;">{{ item.label }}</span>
+              </sc-if>
+              <sc-if value="{{ item.inactive }}" hint-placeholder-val="{{ true }}">
+                <span style="font-weight:500;color:rgba(255,255,255,0.72);white-space:nowrap;">{{ item.label }}</span>
+              </sc-if>
+            </button>
+          </sc-for>
+        </nav>
+      </sc-if>
+
+      <div style="display:flex;align-items:center;gap:10px;">
+        <sc-if value="{{ showDesktopNav }}" hint-placeholder-val="{{ true }}">
+          <sc-if value="{{ loggedIn }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ goManage }}" title="Quản lý tin đăng" style="background:rgba(255,255,255,0.14);border:none;cursor:pointer;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+            </button>
+            <button title="Thông báo" style="background:rgba(255,255,255,0.14);border:none;cursor:pointer;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+            </button>
+          </sc-if>
+          <button onClick="{{ goPost }}" style="display:inline-flex;align-items:center;gap:6px;background:#F5A524;color:#3A2600;border:none;border-radius:10px;padding:9px 15px;font-size:14px;font-weight:700;cursor:pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3A2600" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            Đăng tin cho thuê
+          </button>
+        </sc-if>
+
+        <sc-if value="{{ loggedIn }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ goManage }}" style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.14);border:none;border-radius:10px;padding:5px 12px 5px 5px;cursor:pointer;">
+            <span style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.9);display:grid;place-items:center;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <span style="font-size:13.5px;font-weight:700;color:#fff;">{{ currentUserName }}</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </sc-if>
+        <sc-if value="{{ loggedOut }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ goLogin }}" style="background:none;border:none;cursor:pointer;font-size:14px;font-weight:600;color:rgba(255,255,255,0.85);padding:8px;">Đăng nhập</button>
+          <button onClick="{{ goRegister }}" style="background:#fff;color:#3F4A1F;border:none;border-radius:10px;padding:9px 16px;font-size:14px;font-weight:700;cursor:pointer;">Đăng ký</button>
+        </sc-if>
+
+        <sc-if value="{{ showMobileNav }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ toggleMobileNav }}" style="background:rgba(255,255,255,0.14);border:none;cursor:pointer;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
+          </button>
+        </sc-if>
+      </div>
+    </div>
+
+    <sc-if value="{{ mobileNavOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="border-top:1px solid rgba(255,255,255,0.16);background:#3F4A1F;padding:14px 24px 18px;display:flex;flex-direction:column;gap:4px;">
+        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="4">
+          <button onClick="{{ item.onClick }}" style="background:none;border:none;cursor:pointer;font-size:15px;font-weight:600;color:#fff;text-align:left;padding:10px 4px;">{{ item.label }}</button>
+        </sc-for>
+        <div style="height:1px;background:rgba(255,255,255,0.16);margin:6px 0;"></div>
+        <button onClick="{{ goPost }}" style="display:flex;align-items:center;gap:8px;background:#F5A524;color:#3A2600;border:none;border-radius:10px;padding:11px 14px;font-size:14.5px;font-weight:700;cursor:pointer;margin-bottom:8px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3A2600" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          Đăng tin cho thuê
+        </button>
+        <sc-if value="{{ loggedOut }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;gap:8px;">
+            <button onClick="{{ goLogin }}" style="flex:1;background:rgba(255,255,255,0.14);border:none;border-radius:10px;padding:10px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;">Đăng nhập</button>
+            <button onClick="{{ goRegister }}" style="flex:1;background:#fff;border:none;border-radius:10px;padding:10px;font-size:14px;font-weight:700;color:#3F4A1F;cursor:pointer;">Đăng ký</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ loggedIn }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ goManage }}" style="background:rgba(255,255,255,0.14);border:none;border-radius:10px;padding:10px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;">Quản lý tin đăng</button>
+        </sc-if>
+      </div>
+    </sc-if>
+  </header>
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <sc-if value="{{ homeStyleA }}" hint-placeholder-val="{{ true }}">
+      <div style="max-width:1240px;margin:24px auto 0;padding:0 24px;">
+        <div style="position:relative;border-radius:24px;overflow:hidden;min-height:380px;">
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1400&q=80" alt="Phòng trọ" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+          <div style="position:absolute;inset:0;background:linear-gradient(100deg, rgba(8,40,26,0.84) 0%, rgba(8,40,26,0.5) 55%, rgba(8,40,26,0.16) 100%);"></div>
+          <div style="position:relative;padding:56px 44px;">
+            <h1 style="color:#fff;font-weight:800;font-size:clamp(28px,4vw,44px);line-height:1.12;letter-spacing:-1px;max-width:560px;margin:0;">Tìm phòng trọ<br>nhanh chóng, tiện lợi</h1>
+            <p style="color:rgba(255,255,255,0.88);font-size:16px;margin-top:14px;max-width:440px;">Hàng ngàn phòng trọ chất lượng đang chờ bạn khám phá</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;background:#fff;padding:8px;border-radius:16px;margin-top:26px;max-width:720px;">
+              <div style="display:flex;align-items:center;gap:8px;flex:2 1 220px;padding:0 12px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input placeholder="Nhập khu vực, tên đường, quận..." style="border:none;outline:none;font-size:14.5px;width:100%;color:#1A2410;background:none;">
+              </div>
+              <button style="flex:1 1 130px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid #E5E8D9;background:#fff;border-radius:11px;padding:11px 14px;font-size:14px;font-weight:600;color:#55604A;cursor:pointer;">
+                Khoảng giá
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <button onClick="{{ goSearch }}" style="flex:1 1 130px;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:#3F4A1F;color:#fff;border:none;border-radius:11px;padding:11px 22px;font-size:14.5px;font-weight:700;cursor:pointer;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                Tìm kiếm
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:22px;">
+          <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="6">
+            <button onClick="{{ cat.onClick }}" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;background:#fff;border:1px solid #E5E8D9;border-radius:16px;padding:18px 8px;cursor:pointer;">
+              <span style="width:42px;height:42px;border-radius:12px;background:#EDF0DF;display:grid;place-items:center;">
+                <sc-if value="{{ cat.iconHome }}" hint-placeholder-val="{{ false }}">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                </sc-if>
+                <sc-if value="{{ cat.iconUsers }}" hint-placeholder-val="{{ false }}">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </sc-if>
+                <sc-if value="{{ cat.iconBuilding }}" hint-placeholder-val="{{ false }}">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
+                </sc-if>
+                <sc-if value="{{ cat.iconLayers }}" hint-placeholder-val="{{ false }}">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>
+                </sc-if>
+              </span>
+              <span style="font-size:13px;font-weight:600;color:#1A2410;text-align:center;">{{ cat.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="margin-top:40px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+            <h2 style="font-weight:800;font-size:23px;color:#1A2410;letter-spacing:-0.4px;margin:0;">Phòng trọ nổi bật</h2>
+            <button onClick="{{ goSearch }}" style="background:none;border:none;cursor:pointer;color:#3F4A1F;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:4px;">
+              Xem tất cả
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;">
+            <sc-for list="{{ featuredRooms }}" as="r" hint-placeholder-count="4">
+              <dc-import name="RoomCard" room="{{ r }}" on-open="{{ openRoom }}" hint-size="100%,320px"></dc-import>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:44px 0 50px;">
+          <sc-for list="{{ trustItems }}" as="tr" hint-placeholder-count="4">
+            <div style="display:flex;align-items:flex-start;gap:12px;background:#fff;border:1px solid #E5E8D9;border-radius:16px;padding:18px;">
+              <span style="width:40px;height:40px;border-radius:11px;background:#EDF0DF;display:grid;place-items:center;flex-shrink:0;">
+                <sc-if value="{{ tr.iconShield }}" hint-placeholder-val="{{ false }}">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+                </sc-if>
+                <sc-if value="{{ tr.iconSearch }}" hint-placeholder-val="{{ false }}">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </sc-if>
+                <sc-if value="{{ tr.iconHeadphones }}" hint-placeholder-val="{{ false }}">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3v-7a9 9 0 1 1 18 0v7h-3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg>
+                </sc-if>
+                <sc-if value="{{ tr.iconZap }}" hint-placeholder-val="{{ false }}">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+                </sc-if>
+              </span>
+              <div>
+                <div style="font-weight:700;font-size:14.5px;color:#1A2410;">{{ tr.title }}</div>
+                <div style="font-size:12.5px;color:#8D9280;margin-top:2px;">{{ tr.sub }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ homeStyleB }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:1240px;margin:28px auto 0;padding:0 24px;">
+        <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:center;">
+          <div style="flex:1 1 460px;min-width:280px;">
+            <h1 style="font-weight:800;font-size:clamp(28px,4vw,42px);line-height:1.15;letter-spacing:-1px;color:#1A2410;margin:0;">Tìm phòng dễ dàng<br>Sống trọn <span style="color:#3F4A1F;font-style:italic;">bạn thích</span></h1>
+            <p style="font-size:15.5px;color:#55604A;margin-top:14px;max-width:440px;">Roomsy giúp bạn tìm phòng trọ, căn hộ và tìm người ở ghép uy tín, nhanh chóng và an toàn.</p>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;background:#fff;border:1px solid #E5E8D9;padding:10px;border-radius:16px;margin-top:24px;">
+              <div style="flex:1 1 130px;padding:6px 12px;border-right:1px solid #E5E8D9;">
+                <div style="font-size:11.5px;color:#8D9280;font-weight:600;margin-bottom:3px;">Bạn đang tìm gì?</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
+                  <span style="font-size:14px;font-weight:700;color:#1A2410;">Phòng trọ</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+              </div>
+              <div style="flex:1 1 130px;padding:6px 12px;border-right:1px solid #E5E8D9;">
+                <div style="font-size:11.5px;color:#8D9280;font-weight:600;margin-bottom:3px;">Khu vực</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
+                  <span style="font-size:14px;font-weight:700;color:#1A2410;">TP. Hồ Chí Minh</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+              </div>
+              <div style="flex:1 1 130px;padding:6px 12px;border-right:1px solid #E5E8D9;">
+                <div style="font-size:11.5px;color:#8D9280;font-weight:600;margin-bottom:3px;">Khoảng giá</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
+                  <span style="font-size:14px;font-weight:700;color:#1A2410;">0 - 5 triệu</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+              </div>
+              <div style="flex:1 1 130px;padding:6px 12px;">
+                <div style="font-size:11.5px;color:#8D9280;font-weight:600;margin-bottom:3px;">Bộ lọc</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
+                  <span style="font-size:14px;font-weight:700;color:#1A2410;">Tiện ích, diện tích...</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+              </div>
+              <button onClick="{{ goSearch }}" style="flex:1 1 160px;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:#3F4A1F;color:#fff;border:none;border-radius:11px;padding:13px 22px;font-size:14.5px;font-weight:700;cursor:pointer;margin:2px;white-space:nowrap;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                Tìm kiếm
+              </button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 18px;margin-top:26px;">
+              <sc-for list="{{ heroBadges }}" as="b" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span style="width:20px;height:20px;border-radius:50%;background:#EDF0DF;display:grid;place-items:center;flex-shrink:0;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </span>
+                  <span style="font-size:13.5px;font-weight:600;color:#1A2410;">{{ b }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="flex:1 1 380px;min-width:280px;position:relative;">
+            <img src="https://images.unsplash.com/photo-1554995207-c18c203602cb?w=900&q=80" alt="Phòng trọ" style="width:100%;height:380px;object-fit:cover;border-radius:22px;">
+            <div style="position:absolute;bottom:-26px;right:-14px;width:260px;background:#fff;border:1px solid #E5E8D9;border-radius:16px;padding:18px;box-shadow:0 18px 44px rgba(16,60,40,0.16);">
+              <div style="display:flex;align-items:center;gap:7px;font-weight:800;font-size:14px;color:#1A2410;margin-bottom:10px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A524" stroke="#F5A524" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+                Nâng cấp tài khoản VIP
+              </div>
+              <sc-for list="{{ vipChecks }}" as="v" hint-placeholder-count="4">
+                <div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:9px;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M20 6 9 17l-5-5"/></svg>
+                  <span style="font-size:12.5px;color:#55604A;line-height:1.4;">{{ v }}</span>
+                </div>
+              </sc-for>
+              <button style="width:100%;background:#F5A524;color:#3A2600;border:none;border-radius:10px;padding:10px;font-size:13.5px;font-weight:800;cursor:pointer;margin-top:6px;">Xem các gói VIP</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:70px;">
+          <sc-for list="{{ featuredRooms }}" as="r" hint-placeholder-count="4">
+            <dc-import name="RoomCard" room="{{ r }}" on-open="{{ openRoom }}" hint-size="100%,320px"></dc-import>
+          </sc-for>
+        </div>
+        <div style="height:50px;"></div>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <sc-if value="{{ isAuth }}" hint-placeholder-val="{{ false }}">
+    <div style="min-height:calc(100vh - 72px);">
+      <sc-if value="{{ authStyleA }}" hint-placeholder-val="{{ true }}">
+        <div style="max-width:460px;margin:44px auto 60px;padding:0 24px;">
+          <dc-import name="AuthCard" initial-mode="{{ authInitialMode }}" on-login-success="{{ handleLoginSuccess }}" on-register-success="{{ handleRegisterSuccess }}" hint-size="100%,520px"></dc-import>
+        </div>
+      </sc-if>
+      <sc-if value="{{ authStyleB }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-wrap:wrap;min-height:calc(100vh - 72px);">
+          <div style="flex:1 1 380px;background:linear-gradient(160deg,#2E3717 0%,#3F4A1F 100%);padding:60px 44px;display:flex;flex-direction:column;justify-content:center;min-height:320px;">
+            <span style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,0.16);display:grid;place-items:center;margin-bottom:22px;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            </span>
+            <h1 style="color:#fff;font-weight:800;font-size:clamp(24px,3vw,34px);line-height:1.2;letter-spacing:-0.5px;max-width:380px;margin:0;">Tìm phòng dễ dàng, sống trọn bạn thích</h1>
+            <p style="color:rgba(255,255,255,0.82);font-size:14.5px;margin-top:14px;max-width:340px;">Hàng ngàn phòng trọ, căn hộ và bạn ở ghép uy tín đang chờ bạn.</p>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:28px;">
+              <sc-for list="{{ heroBadges }}" as="b" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span style="width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,0.16);display:grid;place-items:center;flex-shrink:0;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </span>
+                  <span style="font-size:13.5px;font-weight:600;color:#fff;">{{ b }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="flex:1 1 380px;display:flex;align-items:center;justify-content:center;padding:60px 24px;">
+            <div style="width:100%;max-width:400px;">
+              <dc-import name="AuthCard" initial-mode="{{ authInitialMode }}" on-login-success="{{ handleLoginSuccess }}" on-register-success="{{ handleRegisterSuccess }}" hint-size="100%,520px"></dc-import>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isSearch }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:1240px;margin:0 auto;padding:22px 24px 60px;">
+      <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:#1A2410;font-weight:700;font-size:18px;padding:0;margin-bottom:16px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A2410" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Tìm phòng
+      </button>
+
+      <sc-if value="{{ searchLayoutA }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:#fff;border:1px solid #E5E8D9;border-radius:14px;padding:8px;">
+          <div style="display:flex;align-items:center;gap:8px;padding:0 10px;flex:1;min-width:200px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <input value="{{ searchQuery }}" onChange="{{ setSearchQuery }}" placeholder="Quận 7, TP. Hồ Chí Minh" style="border:none;outline:none;font-size:14px;width:100%;color:#1A2410;background:none;">
+          </div>
+          <button onClick="{{ toggleFilterPanel }}" style="display:inline-flex;align-items:center;gap:6px;border:1px solid #E5E8D9;background:#fff;border-radius:10px;padding:9px 13px;font-size:13.5px;font-weight:600;color:#55604A;cursor:pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#55604A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
+            Bộ lọc (mobile)
+          </button>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin:18px 2px 14px;">
+          <span style="font-size:14px;color:#55604A;">Có <b style="color:#1A2410;">{{ resultsCount }}</b> phòng phù hợp</span>
+          <span style="font-size:13.5px;color:#8D9280;">Sắp xếp: <b style="color:#1A2410;">Mới nhất</b></span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;">
+          <aside style="flex:1 1 260px;max-width:300px;background:#fff;border:1px solid #E5E8D9;border-radius:16px;padding:18px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <span style="font-weight:800;font-size:15px;color:#1A2410;">Lọc tìm kiếm</span>
+              <button onClick="{{ resetFilters }}" style="background:none;border:none;cursor:pointer;color:#3F4A1F;font-size:12.5px;font-weight:700;">Đặt lại</button>
+            </div>
+            <div style="font-weight:700;font-size:13.5px;color:#1A2410;margin-bottom:10px;">Khoảng giá</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px;">
+              <sc-for list="{{ priceBuckets }}" as="b" hint-placeholder-count="5">
+                <button onClick="{{ b.onToggle }}" style="display:flex;align-items:center;gap:9px;background:none;border:none;cursor:pointer;padding:0;text-align:left;">
+                  <sc-if value="{{ b.active }}" hint-placeholder-val="{{ false }}">
+                    <span style="width:18px;height:18px;border-radius:5px;background:#3F4A1F;display:grid;place-items:center;flex-shrink:0;">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    </span>
+                  </sc-if>
+                  <sc-if value="{{ b.inactive }}" hint-placeholder-val="{{ true }}">
+                    <span style="width:18px;height:18px;border-radius:5px;border:1.5px solid #E5E8D9;flex-shrink:0;"></span>
+                  </sc-if>
+                  <span style="font-size:13.5px;color:#55604A;">{{ b.label }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="font-weight:700;font-size:13.5px;color:#1A2410;margin-bottom:10px;">Diện tích</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px;">
+              <sc-for list="{{ areaBuckets }}" as="b" hint-placeholder-count="4">
+                <button onClick="{{ b.onToggle }}" style="display:flex;align-items:center;gap:9px;background:none;border:none;cursor:pointer;padding:0;text-align:left;">
+                  <sc-if value="{{ b.active }}" hint-placeholder-val="{{ false }}">
+                    <span style="width:18px;height:18px;border-radius:5px;background:#3F4A1F;display:grid;place-items:center;flex-shrink:0;">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    </span>
+                  </sc-if>
+                  <sc-if value="{{ b.inactive }}" hint-placeholder-val="{{ true }}">
+                    <span style="width:18px;height:18px;border-radius:5px;border:1.5px solid #E5E8D9;flex-shrink:0;"></span>
+                  </sc-if>
+                  <span style="font-size:13.5px;color:#55604A;">{{ b.label }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="font-weight:700;font-size:13.5px;color:#1A2410;margin-bottom:10px;">Tiện nghi</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <sc-for list="{{ amenityChips }}" as="a" hint-placeholder-count="8">
+                <button onClick="{{ a.onToggle }}" style="display:flex;align-items:center;gap:9px;background:none;border:none;cursor:pointer;padding:0;text-align:left;">
+                  <sc-if value="{{ a.active }}" hint-placeholder-val="{{ false }}">
+                    <span style="width:18px;height:18px;border-radius:5px;background:#3F4A1F;display:grid;place-items:center;flex-shrink:0;">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    </span>
+                  </sc-if>
+                  <sc-if value="{{ a.inactive }}" hint-placeholder-val="{{ true }}">
+                    <span style="width:18px;height:18px;border-radius:5px;border:1.5px solid #E5E8D9;flex-shrink:0;"></span>
+                  </sc-if>
+                  <span style="font-size:13.5px;color:#55604A;">{{ a.label }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </aside>
+
+          <div style="flex:3 1 560px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;">
+            <sc-for list="{{ filteredRooms }}" as="r" hint-placeholder-count="6">
+              <dc-import name="RoomCard" room="{{ r }}" on-open="{{ openRoom }}" hint-size="100%,320px"></dc-import>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ searchLayoutB }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+          <sc-for list="{{ filterPills }}" as="p" hint-placeholder-count="4">
+            <button onClick="{{ toggleFilterPanel }}" style="display:inline-flex;align-items:center;gap:6px;border:1px solid #E5E8D9;background:#fff;border-radius:20px;padding:9px 15px;font-size:13.5px;font-weight:600;color:#55604A;cursor:pointer;">
+              {{ p }}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+          </sc-for>
+          <button onClick="{{ resetFilters }}" style="background:none;border:none;cursor:pointer;color:#3F4A1F;font-size:13px;font-weight:700;padding:9px 4px;">Đặt lại bộ lọc</button>
+        </div>
+
+        <sc-if value="{{ filterPanelOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #E5E8D9;border-radius:16px;padding:18px;margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
+            <div>
+              <div style="font-weight:700;font-size:13.5px;color:#1A2410;margin-bottom:10px;">Khoảng giá</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <sc-for list="{{ priceBuckets }}" as="b" hint-placeholder-count="5">
+                  <button onClick="{{ b.onToggle }}" style="border-radius:9px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid #D9DCC2;background:#EDF0DF;color:#2E3717;">{{ b.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:13.5px;color:#1A2410;margin-bottom:10px;">Diện tích</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <sc-for list="{{ areaBuckets }}" as="b" hint-placeholder-count="4">
+                  <button onClick="{{ b.onToggle }}" style="border-radius:9px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid #D9DCC2;background:#EDF0DF;color:#2E3717;">{{ b.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:13.5px;color:#1A2410;margin-bottom:10px;">Tiện nghi</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <sc-for list="{{ amenityChips }}" as="a" hint-placeholder-count="8">
+                  <button onClick="{{ a.onToggle }}" style="border-radius:9px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid #D9DCC2;background:#EDF0DF;color:#2E3717;">{{ a.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin:18px 2px 14px;">
+          <span style="font-size:14px;color:#55604A;">Có <b style="color:#1A2410;">{{ resultsCount }}</b> phòng phù hợp</span>
+          <span style="font-size:13.5px;color:#8D9280;">Sắp xếp: <b style="color:#1A2410;">Mới nhất</b></span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <sc-for list="{{ filteredRooms }}" as="r" hint-placeholder-count="6">
+            <button onClick="{{ r.onOpen }}" style="display:flex;flex-wrap:wrap;gap:16px;text-align:left;background:#fff;border:1px solid #E5E8D9;border-radius:16px;padding:12px;cursor:pointer;">
+              <div style="width:180px;height:130px;border-radius:12px;overflow:hidden;flex-shrink:0;">
+                <dc-import name="DynImage" src="{{ r.img }}" alt="{{ r.title }}" hint-size="180px,130px"></dc-import>
+              </div>
+              <div style="flex:1;min-width:200px;">
+                <span style="display:inline-flex;align-items:center;gap:3px;font-size:12.5px;font-weight:700;color:#F5A524;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="#F5A524" stroke="#F5A524" stroke-width="1"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+                  {{ r.rating }}
+                </span>
+                <h3 style="font-weight:700;font-size:16px;color:#1A2410;margin:6px 0 4px;">{{ r.title }}</h3>
+                <div style="display:flex;align-items:center;gap:4px;color:#8D9280;font-size:12.5px;margin-bottom:8px;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                  {{ r.loc }}
+                </div>
+                <div style="display:flex;align-items:center;gap:14px;font-size:12.5px;color:#55604A;font-weight:600;">
+                  <span>{{ r.area }}m²</span>
+                  <span>Tầng {{ r.floor }}</span>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:4px;">
+                <span style="font-weight:800;font-size:18px;color:#3F4A1F;">{{ r.priceLabel }}</span>
+                <span style="font-size:12px;color:#8D9280;">/tháng</span>
+              </div>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:1240px;margin:0 auto;padding:22px 24px 60px;">
+      <button onClick="{{ goSearch }}" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:#8D9280;font-weight:600;font-size:14px;margin-bottom:16px;padding:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        Tìm phòng
+      </button>
+
+      <sc-if value="{{ detailLayoutA }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start;">
+          <div style="flex:3 1 520px;min-width:280px;">
+            <div style="width:100%;height:380px;border-radius:18px;overflow:hidden;">
+              <dc-import name="DynImage" src="{{ currentRoom.mainImg }}" alt="{{ currentRoom.title }}" hint-size="100%,380px"></dc-import>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:10px;">
+              <sc-for list="{{ currentRoom.gallery }}" as="g" hint-placeholder-count="5">
+                <button onClick="{{ g.onSelect }}" style="border:none;border-radius:12px;padding:0;cursor:pointer;flex:1;overflow:hidden;height:66px;">
+                  <dc-import name="DynImage" src="{{ g.src }}" alt="" hint-size="100%,66px"></dc-import>
+                </button>
+              </sc-for>
+            </div>
+
+            <div style="margin-top:26px;">
+              <h2 style="font-weight:800;font-size:19px;color:#1A2410;margin:0 0 12px;">Tiện nghi</h2>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;">
+                <sc-for list="{{ currentRoom.amenityList }}" as="a" hint-placeholder-count="6">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;background:#fff;border:1px solid #E5E8D9;border-radius:14px;padding:14px 8px;">
+                    <span style="width:36px;height:36px;border-radius:10px;background:#EDF0DF;display:grid;place-items:center;">
+                      <dc-import name="AmenityIcon" icon-key="{{ a.key }}" hint-size="18px,18px"></dc-import>
+                    </span>
+                    <span style="font-size:12.5px;font-weight:600;color:#1A2410;text-align:center;">{{ a.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="margin-top:26px;">
+              <h2 style="font-weight:800;font-size:19px;color:#1A2410;margin:0 0 10px;">Mô tả</h2>
+              <p style="font-size:14.5px;color:#55604A;line-height:1.6;margin:0;">{{ currentRoom.desc }}</p>
+            </div>
+          </div>
+
+          <div style="flex:2 1 340px;min-width:280px;position:sticky;top:88px;">
+            <span style="display:inline-flex;align-items:center;gap:3px;font-size:13px;font-weight:700;color:#F5A524;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#F5A524" stroke="#F5A524" stroke-width="1"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+              {{ currentRoom.rating }} · {{ currentRoom.area }}m²
+            </span>
+            <h1 style="font-weight:800;font-size:25px;color:#1A2410;margin:8px 0 6px;letter-spacing:-0.4px;line-height:1.25;">{{ currentRoom.title }}</h1>
+            <div style="display:flex;align-items:center;gap:5px;color:#8D9280;font-size:14px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              {{ currentRoom.loc }}
+            </div>
+            <div style="margin:16px 0;padding:16px 0;border-top:1px solid #E5E8D9;border-bottom:1px solid #E5E8D9;">
+              <span style="font-weight:800;font-size:25px;color:#3F4A1F;">{{ currentRoom.priceLabel }}</span>
+              <span style="font-size:14px;color:#8D9280;">/tháng</span>
+              <div style="display:flex;align-items:center;gap:16px;margin-top:14px;flex-wrap:wrap;">
+                <span style="display:inline-flex;align-items:center;gap:5px;font-size:13.5px;color:#55604A;font-weight:600;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/></svg>
+                  {{ currentRoom.area }}m²
+                </span>
+                <span style="display:inline-flex;align-items:center;gap:5px;font-size:13.5px;color:#55604A;font-weight:600;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+                  Tầng {{ currentRoom.floor }}
+                </span>
+                <span style="display:inline-flex;align-items:center;gap:5px;font-size:13.5px;color:#55604A;font-weight:600;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/></svg>
+                  WC riêng
+                </span>
+              </div>
+            </div>
+
+            <sc-if value="{{ showPhone }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:8px;background:#EDF0DF;border-radius:13px;padding:14px;margin-bottom:10px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
+                <span style="font-weight:800;font-size:17px;color:#2E3717;">0987 654 321</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ hidePhone }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ revealPhone }}" style="width:100%;background:#3F4A1F;color:#fff;border:none;border-radius:13px;padding:15px;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
+                Liên hệ
+              </button>
+            </sc-if>
+            <button onClick="{{ toggleDetailFav }}" style="width:100%;background:#fff;color:#3F4A1F;border:1.5px solid #D9DCC2;border-radius:13px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;">
+              <sc-if value="{{ detailFavorited }}" hint-placeholder-val="{{ false }}">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="#F97316" stroke="#F97316" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                Đã lưu yêu thích
+              </sc-if>
+              <sc-if value="{{ detailNotFavorited }}" hint-placeholder-val="{{ true }}">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                Lưu yêu thích
+              </sc-if>
+            </button>
+
+            <div style="display:flex;align-items:center;gap:12px;margin-top:18px;padding:14px;border:1px solid #E5E8D9;border-radius:14px;">
+              <span style="width:46px;height:46px;border-radius:50%;background:#EDF0DF;display:grid;place-items:center;flex-shrink:0;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+              <div style="flex:1;">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span style="font-weight:700;font-size:15px;color:#1A2410;">Trần Minh Khoa</span>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+                </div>
+                <div style="font-size:12.5px;color:#8D9280;margin-top:2px;">Đã xác thực · Thành viên 2 năm</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ detailLayoutB }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:760px;margin:0 auto 90px;">
+          <div style="position:relative;">
+            <div style="width:100%;height:340px;border-radius:18px;overflow:hidden;">
+              <dc-import name="DynImage" src="{{ currentRoom.mainImg }}" alt="{{ currentRoom.title }}" hint-size="100%,340px"></dc-import>
+            </div>
+            <div style="position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:6px;">
+              <sc-for list="{{ currentRoom.gallery }}" as="g" hint-placeholder-count="5">
+                <button onClick="{{ g.onSelect }}" style="width:8px;height:8px;border-radius:50%;border:none;padding:0;cursor:pointer;background:{{ g.dotColor }};"></button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:18px;">
+            <div>
+              <span style="display:inline-flex;align-items:center;gap:3px;font-size:13px;font-weight:700;color:#F5A524;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#F5A524" stroke="#F5A524" stroke-width="1"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+                {{ currentRoom.rating }}
+              </span>
+              <h1 style="font-weight:800;font-size:23px;color:#1A2410;margin:6px 0;letter-spacing:-0.3px;">{{ currentRoom.title }}</h1>
+              <div style="display:flex;align-items:center;gap:5px;color:#8D9280;font-size:14px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                {{ currentRoom.loc }}
+              </div>
+            </div>
+            <button onClick="{{ toggleDetailFav }}" style="width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid #E5E8D9;display:grid;place-items:center;cursor:pointer;flex-shrink:0;">
+              <sc-if value="{{ detailFavorited }}" hint-placeholder-val="{{ false }}">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="#F97316" stroke="#F97316" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+              </sc-if>
+              <sc-if value="{{ detailNotFavorited }}" hint-placeholder-val="{{ true }}">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+              </sc-if>
+            </button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin:18px 0;">
+            <sc-for list="{{ currentRoom.amenityList }}" as="a" hint-placeholder-count="6">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:7px;background:#fff;border:1px solid #E5E8D9;border-radius:14px;padding:14px 8px;">
+                <span style="width:34px;height:34px;border-radius:10px;background:#EDF0DF;display:grid;place-items:center;">
+                  <dc-import name="AmenityIcon" icon-key="{{ a.key }}" hint-size="17px,17px"></dc-import>
+                </span>
+                <span style="font-size:12px;font-weight:600;color:#1A2410;text-align:center;">{{ a.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <p style="font-size:14.5px;color:#55604A;line-height:1.6;">{{ currentRoom.desc }}</p>
+
+          <div style="display:flex;align-items:center;gap:12px;margin-top:8px;padding:14px;border:1px solid #E5E8D9;border-radius:14px;">
+            <span style="width:44px;height:44px;border-radius:50%;background:#EDF0DF;display:grid;place-items:center;flex-shrink:0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <div style="flex:1;">
+              <div style="font-weight:700;font-size:14.5px;color:#1A2410;">Trần Minh Khoa · Đã xác thực</div>
+              <div style="font-size:12.5px;color:#8D9280;margin-top:2px;">Thành viên 2 năm</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #E5E8D9;padding:12px 24px;z-index:60;">
+          <div style="max-width:760px;margin:0 auto;display:flex;align-items:center;gap:14px;">
+            <div style="flex:1;">
+              <span style="font-weight:800;font-size:19px;color:#3F4A1F;">{{ currentRoom.priceLabel }}</span>
+              <span style="font-size:13px;color:#8D9280;">/tháng</span>
+            </div>
+            <sc-if value="{{ showPhone }}" hint-placeholder-val="{{ false }}">
+              <span style="font-weight:800;font-size:15px;color:#2E3717;">0987 654 321</span>
+            </sc-if>
+            <sc-if value="{{ hidePhone }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ revealPhone }}" style="background:#3F4A1F;color:#fff;border:none;border-radius:12px;padding:13px 24px;font-size:14.5px;font-weight:800;cursor:pointer;">Liên hệ</button>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isManage }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:1000px;margin:0 auto;padding:26px 24px 60px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px;">
+        <h1 style="font-weight:800;font-size:24px;color:#1A2410;margin:0;">Quản lý tin đăng</h1>
+        <button onClick="{{ goPost }}" style="display:inline-flex;align-items:center;gap:7px;background:#3F4A1F;color:#fff;border:none;border-radius:11px;padding:11px 18px;font-size:14px;font-weight:700;cursor:pointer;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          Đăng tin mới
+        </button>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:8px;border-bottom:1px solid #E5E8D9;margin-bottom:20px;">
+        <sc-for list="{{ manageTabs }}" as="t" hint-placeholder-count="4">
+          <button onClick="{{ t.onClick }}" style="background:none;border:none;cursor:pointer;padding:10px 4px 12px;font-size:14px;font-weight:700;margin-right:18px;border-bottom:2.5px solid transparent;">
+            <sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}">
+              <span style="color:#3F4A1F;border-bottom:2.5px solid #3F4A1F;padding-bottom:12px;">{{ t.label }} ({{ t.count }})</span>
+            </sc-if>
+            <sc-if value="{{ t.inactive }}" hint-placeholder-val="{{ true }}">
+              <span style="color:#8D9280;">{{ t.label }} ({{ t.count }})</span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <sc-for list="{{ manageListings }}" as="m" hint-placeholder-count="3" hint-placeholder-key="id">
+          <div style="display:flex;flex-wrap:wrap;gap:16px;background:#fff;border:1px solid #E5E8D9;border-radius:16px;padding:14px;">
+            <div style="width:130px;height:96px;border-radius:12px;overflow:hidden;flex-shrink:0;">
+              <dc-import name="DynImage" src="{{ m.img }}" alt="{{ m.title }}" hint-size="130px,96px"></dc-import>
+            </div>
+            <div style="flex:1;min-width:200px;">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <h3 style="font-weight:700;font-size:15.5px;color:#1A2410;margin:0;">{{ m.title }}</h3>
+                <span style="font-size:11px;font-weight:800;padding:3px 9px;border-radius:7px;color:{{ m.statusTextColor }};background:{{ m.statusBgColor }};">{{ m.statusLabel }}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:4px;color:#8D9280;font-size:12.5px;margin:6px 0;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                {{ m.loc }}
+              </div>
+              <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+                <span style="font-weight:800;font-size:15.5px;color:#3F4A1F;">{{ m.priceLabel }}<span style="font-size:12px;color:#8D9280;font-weight:600;">/tháng</span></span>
+                <span style="font-size:12.5px;color:#8D9280;">{{ m.views }} lượt xem</span>
+                <span style="font-size:12.5px;color:#8D9280;">{{ m.updatedAt }}</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button onClick="{{ goPost }}" title="Sửa" style="width:38px;height:38px;border-radius:10px;background:#fff;border:1px solid #E5E8D9;cursor:pointer;display:grid;place-items:center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#55604A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+              </button>
+              <button onClick="{{ m.onToggleHide }}" title="{{ m.hideActionLabel }}" style="width:38px;height:38px;border-radius:10px;background:#fff;border:1px solid #E5E8D9;cursor:pointer;display:grid;place-items:center;">
+                <sc-if value="{{ m.isHidden }}" hint-placeholder-val="{{ false }}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#55604A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                </sc-if>
+                <sc-if value="{{ m.isNotHidden }}" hint-placeholder-val="{{ true }}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#55604A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>
+                </sc-if>
+              </button>
+              <button onClick="{{ m.onDelete }}" title="Xoá" style="width:38px;height:38px;border-radius:10px;background:#fff;border:1px solid #E5E8D9;cursor:pointer;display:grid;place-items:center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              </button>
+            </div>
+          </div>
+        </sc-for>
+
+        <sc-if value="{{ manageEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;padding:60px 20px;color:#8D9280;">
+            <div style="font-size:15px;font-weight:600;">Không có tin đăng nào trong mục này.</div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isPost }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:680px;margin:0 auto;padding:26px 24px 60px;">
+      <button onClick="{{ goManage }}" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:#8D9280;font-weight:600;font-size:14px;margin-bottom:18px;padding:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        Quản lý tin đăng
+      </button>
+
+      <div style="display:flex;align-items:center;margin-bottom:26px;">
+        <sc-for list="{{ postSteps }}" as="s" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;flex:{{ s.flexGrow }};">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+              <span style="width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;background:{{ s.circleBg }};color:{{ s.circleText }};">
+                <sc-if value="{{ s.done }}" hint-placeholder-val="{{ false }}">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                </sc-if>
+                <sc-if value="{{ s.notDone }}" hint-placeholder-val="{{ true }}">{{ s.number }}</sc-if>
+              </span>
+              <span style="font-size:11.5px;font-weight:700;color:{{ s.labelColor }};white-space:nowrap;">{{ s.label }}</span>
+            </div>
+            <sc-if value="{{ s.hasLine }}" hint-placeholder-val="{{ false }}">
+              <div style="flex:1;height:3px;border-radius:2px;margin:0 8px 18px;background:{{ s.lineColor }};"></div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="background:#fff;border:1px solid #E5E8D9;border-radius:20px;padding:26px;box-shadow:0 18px 50px rgba(16,114,69,0.06);">
+
+        <sc-if value="{{ isPostStep1 }}" hint-placeholder-val="{{ true }}">
+          <h2 style="font-weight:800;font-size:20px;color:#1A2410;margin:0 0 4px;">Thông tin cơ bản</h2>
+          <p style="font-size:13.5px;color:#8D9280;margin:0 0 20px;">Điền thông tin phòng cho thuê của bạn</p>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#1A2410;margin-bottom:6px;">Tiêu đề tin *</div>
+              <input value="{{ postForm.title }}" onChange="{{ setPostTitle }}" placeholder="VD: Phòng trọ thoáng mát có ban công" style="width:100%;border:1px solid #E5E8D9;border-radius:11px;padding:12px 13px;font-size:14px;color:#1A2410;outline:none;">
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#1A2410;margin-bottom:6px;">Giá thuê (đ/tháng) *</div>
+                <input value="{{ postForm.price }}" onChange="{{ setPostPrice }}" placeholder="4500000" style="width:100%;border:1px solid #E5E8D9;border-radius:11px;padding:12px 13px;font-size:14px;color:#1A2410;outline:none;">
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#1A2410;margin-bottom:6px;">Diện tích (m²)</div>
+                <input value="{{ postForm.area }}" onChange="{{ setPostArea }}" placeholder="25" style="width:100%;border:1px solid #E5E8D9;border-radius:11px;padding:12px 13px;font-size:14px;color:#1A2410;outline:none;">
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#1A2410;margin-bottom:6px;">Tầng</div>
+                <input value="{{ postForm.floor }}" onChange="{{ setPostFloor }}" placeholder="3" style="width:100%;border:1px solid #E5E8D9;border-radius:11px;padding:12px 13px;font-size:14px;color:#1A2410;outline:none;">
+              </div>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#1A2410;margin-bottom:6px;">Địa chỉ</div>
+              <div style="display:flex;align-items:center;gap:8px;border:1px solid #E5E8D9;border-radius:11px;padding:12px 13px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8D9280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <input value="{{ postForm.address }}" onChange="{{ setPostAddress }}" placeholder="VD: Quận 7, TP. Hồ Chí Minh" style="border:none;outline:none;width:100%;font-size:14px;color:#1A2410;background:none;">
+              </div>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#1A2410;margin-bottom:6px;">Mô tả chi tiết</div>
+              <textarea value="{{ postForm.desc }}" onChange="{{ setPostDesc }}" placeholder="Mô tả phòng, tiện nghi, khu vực..." rows="4" style="width:100%;border:1px solid #E5E8D9;border-radius:11px;padding:12px 13px;font-size:14px;color:#1A2410;outline:none;resize:none;font-family:inherit;"></textarea>
+            </div>
+            <sc-if value="{{ hasPostErr }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#FFF1E7;color:#B45309;border-radius:10px;padding:10px 13px;font-size:13px;font-weight:600;">{{ postErr }}</div>
+            </sc-if>
+          </div>
+          <button onClick="{{ goPostStep2 }}" style="width:100%;background:#3F4A1F;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;">
+            Tiếp tục
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </sc-if>
+
+        <sc-if value="{{ isPostStep2 }}" hint-placeholder-val="{{ false }}">
+          <h2 style="font-weight:800;font-size:20px;color:#1A2410;margin:0 0 4px;">Tiện nghi &amp; điều kiện sinh hoạt</h2>
+          <p style="font-size:13.5px;color:#8D9280;margin:0 0 20px;">Chọn các tiện nghi và điều kiện phù hợp với phòng của bạn</p>
+          <div style="font-weight:700;font-size:13.5px;color:#1A2410;margin-bottom:10px;">Tiện nghi</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px;">
+            <sc-for list="{{ postAmenityChips }}" as="a" hint-placeholder-count="8">
+              <button onClick="{{ a.onToggle }}" style="display:inline-flex;align-items:center;gap:7px;border-radius:11px;padding:9px 14px;font-size:13.5px;font-weight:600;cursor:pointer;border:1.5px solid {{ a.borderColor }};background:{{ a.bg }};color:{{ a.text }};">
+                <dc-import name="AmenityIcon" icon-key="{{ a.key }}" hint-size="15px,15px"></dc-import>
+                {{ a.label }}
+              </button>
+            </sc-for>
+          </div>
+          <div style="font-weight:700;font-size:13.5px;color:#1A2410;margin-bottom:10px;">Điều kiện sinh hoạt</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <sc-for list="{{ postLifestyleChips }}" as="l" hint-placeholder-count="6">
+              <button onClick="{{ l.onToggle }}" style="border-radius:11px;padding:9px 14px;font-size:13.5px;font-weight:600;cursor:pointer;border:1.5px solid {{ l.borderColor }};background:{{ l.bg }};color:{{ l.text }};">{{ l.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:24px;">
+            <button onClick="{{ goPostStep1 }}" style="flex:1;background:#fff;color:#1A2410;border:1px solid #E5E8D9;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;">Quay lại</button>
+            <button onClick="{{ goPostStep3 }}" style="flex:2;background:#3F4A1F;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;">Tiếp tục</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isPostStep3 }}" hint-placeholder-val="{{ false }}">
+          <h2 style="font-weight:800;font-size:20px;color:#1A2410;margin:0 0 4px;">Ảnh &amp; xác nhận</h2>
+          <p style="font-size:13.5px;color:#8D9280;margin:0 0 20px;">Thêm ảnh phòng và kiểm tra lại thông tin trước khi đăng</p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;margin-bottom:22px;">
+            <sc-for list="{{ postImages }}" as="img" hint-placeholder-count="3">
+              <div style="position:relative;">
+                <div style="width:100%;height:78px;border-radius:10px;overflow:hidden;">
+                  <dc-import name="DynImage" src="{{ img.src }}" alt="" hint-size="100%,78px"></dc-import>
+                </div>
+                <button onClick="{{ img.onRemove }}" style="position:absolute;top:-7px;right:-7px;width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid #E5E8D9;cursor:pointer;display:grid;place-items:center;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#55604A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+              </div>
+            </sc-for>
+            <button onClick="{{ addPostImage }}" style="height:78px;border-radius:10px;border:1.5px dashed #D9DCC2;background:#EDF0DF;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#3F4A1F;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3F4A1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m17 8-5-5-5 5"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
+              <span style="font-size:11.5px;font-weight:700;">Thêm ảnh</span>
+            </button>
+          </div>
+
+          <div style="background:#FBF7EE;border-radius:14px;padding:16px;">
+            <div style="font-weight:800;font-size:14px;color:#1A2410;margin-bottom:10px;">Xem lại tin đăng</div>
+            <div style="font-size:14.5px;font-weight:700;color:#1A2410;">{{ postReviewTitle }}</div>
+            <div style="font-size:13px;color:#55604A;margin-top:3px;">{{ postReviewAddress }}</div>
+            <div style="font-weight:800;font-size:16px;color:#3F4A1F;margin-top:6px;">{{ postReviewPrice }}<span style="font-size:12px;color:#8D9280;font-weight:600;">/tháng · {{ postReviewArea }}</span></div>
+          </div>
+
+          <sc-if value="{{ hasPostErr }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#FFF1E7;color:#B45309;border-radius:10px;padding:10px 13px;font-size:13px;font-weight:600;margin-top:14px;">{{ postErr }}</div>
+          </sc-if>
+
+          <div style="display:flex;gap:10px;margin-top:22px;">
+            <button onClick="{{ goPostStep2 }}" style="flex:1;background:#fff;color:#1A2410;border:1px solid #E5E8D9;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;">Quay lại</button>
+            <button onClick="{{ submitListing }}" style="flex:2;background:#3F4A1F;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+              Đăng tin ngay
+            </button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <footer style="border-top:1px solid #E5E8D9;background:#fff;margin-top:0;">
+      <div style="max-width:1240px;margin:0 auto;padding:26px 24px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="width:26px;height:26px;border-radius:7px;background:#3F4A1F;display:grid;place-items:center;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          </span>
+          <span style="font-weight:700;font-size:13.5px;color:#1A2410;">Roomsy © 2026</span>
+        </div>
+        <div style="font-size:13px;color:#8D9280;">Tìm phòng dễ dàng · Sống trọn bạn thích</div>
+      </div>
+    </footer>
+  </sc-if>
+
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#1A2410;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,0.2);z-index:100;animation:rmsToast 3.5s ease forwards;">{{ toast }}</div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 1000},
+  &quot;homeStyle&quot;: {&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;B&quot;,&quot;options&quot;:[&quot;A&quot;,&quot;B&quot;],&quot;tsType&quot;:&quot;'A'|'B'&quot;,&quot;section&quot;:&quot;Biến thể màn hình&quot;},
+  &quot;authStyle&quot;: {&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;A&quot;,&quot;options&quot;:[&quot;A&quot;,&quot;B&quot;],&quot;tsType&quot;:&quot;'A'|'B'&quot;,&quot;section&quot;:&quot;Biến thể màn hình&quot;},
+  &quot;searchLayout&quot;: {&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;A&quot;,&quot;options&quot;:[&quot;A&quot;,&quot;B&quot;],&quot;tsType&quot;:&quot;'A'|'B'&quot;,&quot;section&quot;:&quot;Biến thể màn hình&quot;},
+  &quot;detailLayout&quot;: {&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;A&quot;,&quot;options&quot;:[&quot;A&quot;,&quot;B&quot;],&quot;tsType&quot;:&quot;'A'|'B'&quot;,&quot;section&quot;:&quot;Biến thể màn hình&quot;}
+}">
+class Component extends DCLogic {
+  state = {
+    screen: "home",
+    isMobile: false,
+    mobileNavOpen: false,
+    loggedIn: false,
+    currentUserName: "Nguyễn Văn A",
+    userRole: "landlord",
+    authInitialMode: "login",
+    toast: "",
+    searchQuery: "Quận 7, TP. Hồ Chí Minh",
+    priceFilter: [],
+    areaFilter: [],
+    amenityFilter: [],
+    filterPanelOpen: false,
+    activeRoomId: 1,
+    galleryIndex: 0,
+    showPhone: false,
+    detailFavorited: false,
+    manageTab: "active",
+    myListings: [
+      { id: 101, title: "Phòng ban công thoáng mát", price: 4500000, loc: "Quận 7, TP. Hồ Chí Minh", img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=900&q=80", status: "active", views: 342, updatedAt: "2 ngày trước" },
+      { id: 102, title: "Căn hộ mini full nội thất", price: 5200000, loc: "Bình Thạnh, TP. Hồ Chí Minh", img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=900&q=80", status: "active", views: 518, updatedAt: "5 giờ trước" },
+      { id: 103, title: "Phòng trọ gần ĐH Tôn Đức Thắng", price: 3800000, loc: "Quận 7, TP. Hồ Chí Minh", img: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=900&q=80", status: "pending", views: 0, updatedAt: "Vừa đăng" },
+      { id: 104, title: "Studio yên tĩnh gần KCN", price: 3500000, loc: "Bình Tân, TP. Hồ Chí Minh", img: "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=900&q=80", status: "pending", views: 0, updatedAt: "Vừa đăng" },
+      { id: 105, title: "Phòng rộng, cửa sổ lớn", price: 4000000, loc: "Thủ Đức, TP. Hồ Chí Minh", img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=900&q=80", status: "hidden", views: 127, updatedAt: "1 tuần trước" },
+      { id: 106, title: "Căn hộ dịch vụ cao cấp", price: 6500000, loc: "Quận 1, TP. Hồ Chí Minh", img: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=900&q=80", status: "expired", views: 892, updatedAt: "Hết hạn 3 ngày trước" }
+    ],
+    postStep: 1,
+    postForm: { title: "", price: "", area: "", floor: "", address: "", desc: "" },
+    postAmenities: [],
+    postLifestyle: [],
+    postImages: [],
+    postErr: ""
+  };
+
+  lifestyleDefs = [
+    { key: "free_hours", label: "Giờ giấc tự do" },
+    { key: "no_smoking", label: "Không hút thuốc" },
+    { key: "pet_ok", label: "Được nuôi thú cưng" },
+    { key: "shared_ok", label: "Ở ghép được" },
+    { key: "female_only", label: "Ưu tiên nữ" },
+    { key: "security_24_7", label: "An ninh 24/7" }
+  ];
+
+  postStepDefs = [
+    { number: 1, label: "Thông tin cơ bản" },
+    { number: 2, label: "Tiện nghi & lối sống" },
+    { number: 3, label: "Ảnh & xác nhận" }
+  ];
+
+  manageTabDefs = [
+    { key: "active", label: "Đang hoạt động" },
+    { key: "pending", label: "Chờ duyệt" },
+    { key: "hidden", label: "Đang ẩn" },
+    { key: "expired", label: "Hết hạn" }
+  ];
+
+  statusStyle(status) {
+    if (status === "active") return { label: "Đang hoạt động", bg: "#EDF0DF", text: "#2E3717" };
+    if (status === "pending") return { label: "Chờ duyệt", bg: "#FFF1E7", text: "#B45309" };
+    if (status === "hidden") return { label: "Đang ẩn", bg: "#E5E8D9", text: "#55604A" };
+    return { label: "Hết hạn", bg: "#F4E2E2", text: "#9B2C2C" };
+  }
+
+  galleryImgs = [
+    "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=900&q=80",
+    "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=900&q=80",
+    "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=900&q=80",
+    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=900&q=80",
+    "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=900&q=80"
+  ];
+
+  roomsData = [
+    { id: 1, title: "Phòng ban công thoáng mát", price: 4500000, area: 25, floor: 3, loc: "Quận 7, TP. Hồ Chí Minh", tag: "hot", rating: 4.8, img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=900&q=80", amenities: ["wifi", "aircon", "parking", "security"], desc: "Phòng thoáng mát có ban công riêng, view thoáng, gần chợ và siêu thị tiện đi lại." },
+    { id: 2, title: "Căn hộ mini full nội thất", price: 5200000, old: 5800000, area: 30, floor: 5, loc: "Bình Thạnh, TP. Hồ Chí Minh", tag: "sale", rating: 4.9, img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=900&q=80", amenities: ["wifi", "aircon", "washer", "fridge", "elevator"], desc: "Căn hộ mini đầy đủ nội thất, thang máy riêng, an ninh 24/7, gần trung tâm quận." },
+    { id: 3, title: "Phòng trọ gần ĐH Tôn Đức Thắng", price: 3800000, area: 20, floor: 2, loc: "Quận 7, TP. Hồ Chí Minh", tag: null, rating: 4.7, img: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=900&q=80", amenities: ["wifi", "parking"], desc: "Gần trường đại học, khu vực yên tĩnh, phù hợp sinh viên và người đi làm." },
+    { id: 4, title: "Phòng rộng, cửa sổ lớn", price: 4000000, area: 20, floor: 4, loc: "Thủ Đức, TP. Hồ Chí Minh", tag: null, rating: 4.6, img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=900&q=80", amenities: ["wifi", "aircon", "camera"], desc: "Phòng rộng rãi, cửa sổ lớn đón nắng tự nhiên, khu dân cư an ninh." },
+    { id: 5, title: "Studio yên tĩnh gần KCN", price: 3500000, area: 22, floor: 1, loc: "Bình Tân, TP. Hồ Chí Minh", tag: null, rating: 4.5, img: "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=900&q=80", amenities: ["wifi", "fridge", "parking"], desc: "Studio riêng tư gần khu công nghiệp, thuận tiện di chuyển, giá tốt." },
+    { id: 6, title: "Căn hộ dịch vụ cao cấp", price: 6500000, area: 28, floor: 8, loc: "Quận 1, TP. Hồ Chí Minh", tag: "hot", rating: 4.9, img: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=900&q=80", amenities: ["wifi", "aircon", "washer", "elevator", "camera", "security"], desc: "Căn hộ dịch vụ trung tâm quận 1, đầy đủ tiện nghi cao cấp, dọn phòng hàng tuần." }
+  ];
+
+  amenityDefs = [
+    { key: "wifi", label: "Wifi" },
+    { key: "aircon", label: "Máy lạnh" },
+    { key: "washer", label: "Máy giặt" },
+    { key: "fridge", label: "Tủ lạnh" },
+    { key: "parking", label: "Bãi xe" },
+    { key: "camera", label: "Camera" },
+    { key: "elevator", label: "Thang máy" },
+    { key: "security", label: "An ninh" }
+  ];
+
+  priceBucketDefs = [
+    { id: "u2", label: "Dưới 2 triệu", test: p => p < 2000000 },
+    { id: "2-3", label: "2 - 3 triệu", test: p => p >= 2000000 && p < 3000000 },
+    { id: "3-5", label: "3 - 5 triệu", test: p => p >= 3000000 && p < 5000000 },
+    { id: "5-7", label: "5 - 7 triệu", test: p => p >= 5000000 && p < 7000000 },
+    { id: "o7", label: "Trên 7 triệu", test: p => p >= 7000000 }
+  ];
+
+  areaBucketDefs = [
+    { id: "u20", label: "Dưới 20m²", test: a => a < 20 },
+    { id: "20-30", label: "20 - 30m²", test: a => a >= 20 && a < 30 },
+    { id: "30-50", label: "30 - 50m²", test: a => a >= 30 && a < 50 },
+    { id: "o50", label: "Trên 50m²", test: a => a >= 50 }
+  ];
+
+  fmt(n) { return Number(n || 0).toLocaleString("vi-VN"); }
+  money(n) { return this.fmt(n) + "đ"; }
+
+  componentDidMount() {
+    this.updateIsMobile = () => this.setState({ isMobile: window.innerWidth < 1080, mobileNavOpen: false });
+    this.updateIsMobile();
+    window.addEventListener("resize", this.updateIsMobile);
+  }
+  componentWillUnmount() {
+    if (this.updateIsMobile) window.removeEventListener("resize", this.updateIsMobile);
+  }
+
+  showToast(msg) {
+    this.setState({ toast: msg });
+    if (this._toastTimer) clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.setState({ toast: "" }), 3500);
+  }
+
+  go(screen) {
+    this.setState({ screen, mobileNavOpen: false });
+    try { window.scrollTo({ top: 0 }); } catch (e) {}
+  }
+
+  openRoomById(id) {
+    this.setState({ activeRoomId: id, galleryIndex: 0, showPhone: false, detailFavorited: false });
+    this.go("detail");
+  }
+
+  getCurrentRoom() {
+    const r = this.roomsData.find(x => x.id === this.state.activeRoomId) || this.roomsData[0];
+    const gIdx = this.state.galleryIndex || 0;
+    const gallery = this.galleryImgs.map((src, i) => ({
+      src,
+      onSelect: () => this.setState({ galleryIndex: i }),
+      dotColor: i === gIdx ? "#3F4A1F" : "rgba(255,255,255,0.6)"
+    }));
+    const amenityList = (r.amenities || []).map(key => ({
+      key,
+      label: this.amenityDefs.find(a => a.key === key) ? this.amenityDefs.find(a => a.key === key).label : key
+    }));
+    return {
+      ...r,
+      priceLabel: this.money(r.price),
+      mainImg: this.galleryImgs[gIdx % this.galleryImgs.length],
+      gallery,
+      amenityList
+    };
+  }
+
+  renderVals() {
+    const screen = this.state.screen;
+    const isMobile = this.state.isMobile;
+
+    const navItems = [
+      { label: "Trang chủ", onClick: () => this.go("home"), active: screen === "home", inactive: screen !== "home" },
+      { label: "Tìm phòng", onClick: () => this.go("search"), active: screen === "search", inactive: screen !== "search" },
+      { label: "Ở ghép", onClick: () => this.go("search"), active: false, inactive: true },
+      { label: "Cộng đồng", onClick: () => this.go("home"), active: false, inactive: true }
+    ];
+
+    const categories = [
+      { label: "Phòng trọ", onClick: () => this.go("search"), iconHome: true },
+      { label: "Ở ghép", onClick: () => this.go("search"), iconUsers: true },
+      { label: "Căn hộ mini", onClick: () => this.go("search"), iconBuilding: true },
+      { label: "Gần trường", onClick: () => this.go("search"), iconLayers: true },
+      { label: "Gần KCN", onClick: () => this.go("search"), iconBuilding: true },
+      { label: "Nhà nguyên căn", onClick: () => this.go("search"), iconHome: true }
+    ];
+
+    const trustItems = [
+      { title: "Tin đăng xác thực", sub: "Đã kiểm duyệt thông tin", iconShield: true },
+      { title: "Thanh toán an toàn", sub: "Bảo mật tuyệt đối", iconSearch: true },
+      { title: "Hỗ trợ 24/7", sub: "Tư vấn tận tâm", iconHeadphones: true },
+      { title: "Giao dịch nhanh", sub: "Tiết kiệm thời gian", iconZap: true }
+    ];
+
+    const heroBadges = ["Tin đăng xác thực", "Thông tin minh bạch", "Kết nối nhanh chóng", "Cộng đồng uy tín"];
+    const vipChecks = ["Duyệt tin ưu tiên", "Tặng lượt quảng bá tin mỗi tháng", "Tặng lượt đẩy tin miễn phí", "Hỗ trợ khách hàng ưu tiên"];
+
+    const featuredRooms = this.roomsData.slice(0, 4).map(r => ({ ...r }));
+
+    const priceFilter = this.state.priceFilter;
+    const areaFilter = this.state.areaFilter;
+    const amenityFilter = this.state.amenityFilter;
+
+    const priceBuckets = this.priceBucketDefs.map(b => ({
+      id: b.id,
+      label: b.label,
+      active: priceFilter.includes(b.id),
+      inactive: !priceFilter.includes(b.id),
+      onToggle: () => this.setState(s => ({ priceFilter: s.priceFilter.includes(b.id) ? s.priceFilter.filter(x => x !== b.id) : [...s.priceFilter, b.id] }))
+    }));
+    const areaBuckets = this.areaBucketDefs.map(b => ({
+      id: b.id,
+      label: b.label,
+      active: areaFilter.includes(b.id),
+      inactive: !areaFilter.includes(b.id),
+      onToggle: () => this.setState(s => ({ areaFilter: s.areaFilter.includes(b.id) ? s.areaFilter.filter(x => x !== b.id) : [...s.areaFilter, b.id] }))
+    }));
+    const amenityChips = this.amenityDefs.map(a => ({
+      key: a.key,
+      label: a.label,
+      active: amenityFilter.includes(a.key),
+      inactive: !amenityFilter.includes(a.key),
+      onToggle: () => this.setState(s => ({ amenityFilter: s.amenityFilter.includes(a.key) ? s.amenityFilter.filter(x => x !== a.key) : [...s.amenityFilter, a.key] }))
+    }));
+
+    const matchesRoom = (r) => {
+      const priceOk = priceFilter.length === 0 || priceFilter.some(id => this.priceBucketDefs.find(b => b.id === id).test(r.price));
+      const areaOk = areaFilter.length === 0 || areaFilter.some(id => this.areaBucketDefs.find(b => b.id === id).test(r.area));
+      const amenityOk = amenityFilter.length === 0 || amenityFilter.every(k => (r.amenities || []).includes(k));
+      return priceOk && areaOk && amenityOk;
+    };
+    const filteredRooms = this.roomsData.filter(matchesRoom).map(r => ({
+      ...r,
+      priceLabel: this.money(r.price),
+      onOpen: () => this.openRoomById(r.id)
+    }));
+
+    const currentRoom = this.getCurrentRoom();
+
+    return {
+      isHome: screen === "home",
+      isAuth: screen === "auth",
+      isSearch: screen === "search",
+      isDetail: screen === "detail",
+      isManage: screen === "manage",
+      isPost: screen === "post",
+
+      homeStyleA: (this.props.homeStyle ?? "B") === "A",
+      homeStyleB: (this.props.homeStyle ?? "B") === "B",
+      authStyleA: (this.props.authStyle ?? "A") === "A",
+      authStyleB: (this.props.authStyle ?? "A") === "B",
+
+      showDesktopNav: !isMobile,
+      showMobileNav: isMobile,
+      mobileNavOpen: this.state.mobileNavOpen,
+      toggleMobileNav: () => this.setState(s => ({ mobileNavOpen: !s.mobileNavOpen })),
+
+      loggedIn: this.state.loggedIn,
+      loggedOut: !this.state.loggedIn,
+      currentUserName: this.state.currentUserName,
+
+      goHome: () => this.go("home"),
+      goSearch: () => this.go("search"),
+      goManage: () => this.go("manage"),
+      openRoom: (room) => this.openRoomById(room.id),
+      goPost: () => this.go("post"),
+      goLogin: () => { this.setState({ authInitialMode: "login" }); this.go("auth"); },
+      goRegister: () => { this.setState({ authInitialMode: "role" }); this.go("auth"); },
+      handleLoginSuccess: () => { this.setState({ loggedIn: true }); this.go("home"); this.showToast("Đăng nhập thành công!"); },
+      handleRegisterSuccess: (role) => { this.setState({ loggedIn: true, userRole: role || "tenant" }); this.go("home"); this.showToast("Đăng ký thành công! Chào mừng bạn đến với Roomsy."); },
+
+      navItems,
+      categories,
+      trustItems,
+      heroBadges,
+      vipChecks,
+      featuredRooms,
+
+      searchLayoutA: (this.props.searchLayout ?? "A") === "A",
+      searchLayoutB: (this.props.searchLayout ?? "A") === "B",
+      searchQuery: this.state.searchQuery,
+      setSearchQuery: (e) => this.setState({ searchQuery: e.target.value }),
+      priceBuckets,
+      areaBuckets,
+      amenityChips,
+      filterPills: ["Khoảng giá", "Diện tích", "Tiện nghi", "Khác"],
+      filterPanelOpen: this.state.filterPanelOpen,
+      toggleFilterPanel: () => this.setState(s => ({ filterPanelOpen: !s.filterPanelOpen })),
+      resetFilters: () => this.setState({ priceFilter: [], areaFilter: [], amenityFilter: [] }),
+      filteredRooms,
+      resultsCount: filteredRooms.length,
+
+      detailLayoutA: (this.props.detailLayout ?? "A") === "A",
+      detailLayoutB: (this.props.detailLayout ?? "A") === "B",
+      currentRoom,
+      showPhone: this.state.showPhone,
+      hidePhone: !this.state.showPhone,
+      revealPhone: () => this.setState({ showPhone: true }),
+      detailFavorited: this.state.detailFavorited,
+      detailNotFavorited: !this.state.detailFavorited,
+      toggleDetailFav: () => this.setState(s => ({ detailFavorited: !s.detailFavorited })),
+
+      manageTabs: this.manageTabDefs.map(t => ({
+        key: t.key,
+        label: t.label,
+        count: this.state.myListings.filter(m => m.status === t.key).length,
+        active: this.state.manageTab === t.key,
+        inactive: this.state.manageTab !== t.key,
+        onClick: () => this.setState({ manageTab: t.key })
+      })),
+      manageListings: this.state.myListings.filter(m => m.status === this.state.manageTab).map(m => {
+        const st = this.statusStyle(m.status);
+        return {
+          ...m,
+          priceLabel: this.money(m.price),
+          statusLabel: st.label,
+          statusBgColor: st.bg,
+          statusTextColor: st.text,
+          isHidden: m.status === "hidden",
+          isNotHidden: m.status !== "hidden",
+          hideActionLabel: m.status === "hidden" ? "Bỏ ẩn" : "Ẩn tin",
+          onToggleHide: () => this.setState(s => ({ myListings: s.myListings.map(x => x.id === m.id ? { ...x, status: x.status === "hidden" ? "active" : "hidden" } : x) })),
+          onDelete: () => {
+            if (!window.confirm("Xoá tin đăng này?")) return;
+            this.setState(s => ({ myListings: s.myListings.filter(x => x.id !== m.id) }));
+          }
+        };
+      }),
+      manageEmpty: this.state.myListings.filter(m => m.status === this.state.manageTab).length === 0,
+
+      isPostStep1: this.state.postStep === 1,
+      isPostStep2: this.state.postStep === 2,
+      isPostStep3: this.state.postStep === 3,
+      postSteps: this.postStepDefs.map((s, i) => {
+        const cur = this.state.postStep;
+        const done = cur > s.number;
+        const active = cur === s.number;
+        return {
+          number: s.number,
+          label: s.label,
+          done,
+          notDone: !done,
+          circleBg: done || active ? "#3F4A1F" : "#E5E8D9",
+          circleText: done || active ? "#fff" : "#8A968F",
+          labelColor: active ? "#13231B" : "#8A968F",
+          hasLine: i < this.postStepDefs.length - 1,
+          lineColor: cur > s.number ? "#3F4A1F" : "#E5E8D9",
+          flexGrow: i < this.postStepDefs.length - 1 ? 1 : 0
+        };
+      }),
+      postForm: this.state.postForm,
+      setPostTitle: (e) => this.setState(s => ({ postForm: { ...s.postForm, title: e.target.value } })),
+      setPostPrice: (e) => this.setState(s => ({ postForm: { ...s.postForm, price: e.target.value } })),
+      setPostArea: (e) => this.setState(s => ({ postForm: { ...s.postForm, area: e.target.value } })),
+      setPostFloor: (e) => this.setState(s => ({ postForm: { ...s.postForm, floor: e.target.value } })),
+      setPostAddress: (e) => this.setState(s => ({ postForm: { ...s.postForm, address: e.target.value } })),
+      setPostDesc: (e) => this.setState(s => ({ postForm: { ...s.postForm, desc: e.target.value } })),
+      hasPostErr: !!this.state.postErr,
+      postErr: this.state.postErr,
+
+      goPostStep1: () => this.setState({ postStep: 1 }),
+      goPostStep2: () => {
+        if (!this.state.postForm.title.trim() || !String(this.state.postForm.price).trim()) {
+          this.setState({ postErr: "Vui lòng nhập ít nhất Tiêu đề và Giá thuê." });
+          return;
+        }
+        this.setState({ postErr: "", postStep: 2 });
+      },
+      goPostStep3: () => this.setState({ postStep: 3 }),
+
+      postAmenityChips: this.amenityDefs.map(a => {
+        const on = this.state.postAmenities.includes(a.key);
+        return {
+          key: a.key,
+          label: a.label,
+          borderColor: on ? "#D9DCC2" : "#E5E8D9",
+          bg: on ? "#EDF0DF" : "#fff",
+          text: on ? "#2E3717" : "#55604A",
+          onToggle: () => this.setState(s => ({ postAmenities: s.postAmenities.includes(a.key) ? s.postAmenities.filter(x => x !== a.key) : [...s.postAmenities, a.key] }))
+        };
+      }),
+      postLifestyleChips: this.lifestyleDefs.map(l => {
+        const on = this.state.postLifestyle.includes(l.key);
+        return {
+          key: l.key,
+          label: l.label,
+          borderColor: on ? "#D9DCC2" : "#E5E8D9",
+          bg: on ? "#EDF0DF" : "#fff",
+          text: on ? "#2E3717" : "#55604A",
+          onToggle: () => this.setState(s => ({ postLifestyle: s.postLifestyle.includes(l.key) ? s.postLifestyle.filter(x => x !== l.key) : [...s.postLifestyle, l.key] }))
+        };
+      }),
+
+      postImages: this.state.postImages.map((src, i) => ({
+        src,
+        onRemove: () => this.setState(s => ({ postImages: s.postImages.filter((_, idx) => idx !== i) }))
+      })),
+      addPostImage: () => this.setState(s => ({ postImages: [...s.postImages, this.galleryImgs[s.postImages.length % this.galleryImgs.length]] })),
+
+      postReviewTitle: this.state.postForm.title.trim() || "(Chưa có tiêu đề)",
+      postReviewAddress: this.state.postForm.address.trim() || "Chưa có địa chỉ",
+      postReviewPrice: this.state.postForm.price ? this.money(parseInt(String(this.state.postForm.price).replace(/\D/g, ""), 10) || 0) : "0đ",
+      postReviewArea: this.state.postForm.area ? this.state.postForm.area + "m²" : "—",
+
+      submitListing: () => {
+        const f = this.state.postForm;
+        if (!f.title.trim() || !String(f.price).trim()) {
+          this.setState({ postErr: "Vui lòng nhập ít nhất Tiêu đề và Giá thuê.", postStep: 1 });
+          return;
+        }
+        const newListing = {
+          id: Date.now(),
+          title: f.title.trim(),
+          price: parseInt(String(f.price).replace(/\D/g, ""), 10) || 0,
+          loc: f.address.trim() || "TP. Hồ Chí Minh",
+          img: this.state.postImages[0] || this.galleryImgs[0],
+          status: "pending",
+          views: 0,
+          updatedAt: "Vừa đăng"
+        };
+        this.setState(s => ({
+          myListings: [newListing, ...s.myListings],
+          postStep: 1,
+          postForm: { title: "", price: "", area: "", floor: "", address: "", desc: "" },
+          postAmenities: [],
+          postLifestyle: [],
+          postImages: [],
+          postErr: "",
+          manageTab: "pending"
+        }));
+        this.go("manage");
+        this.showToast("Đăng tin thành công! Tin đang chờ admin duyệt.");
+      },
+
+      authInitialMode: this.state.authInitialMode,
+
+      hasToast: !!this.state.toast,
+      toast: this.state.toast
+    };
+  }
+}
+
+</script>
+</body>
+</html>

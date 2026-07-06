@@ -1,0 +1,57 @@
+Setup project ROOMSY từ đầu.
+
+Tech: Next.js 14 (App Router, TypeScript), Tailwind CSS, Supabase.
+
+1. Khởi tạo Next.js project, cấu hình Tailwind với theme màu:
+   - primary: #15915A
+   - background: #F4F8F6
+   - Font: Be Vietnam Pro (import từ Google Fonts trong layout gốc)
+   - Mobile-first breakpoints
+
+2. Setup Supabase client (browser + server) trong /lib/supabase/
+   Tôi sẽ cung cấp Project URL, anon key, service role key khi bạn hỏi.
+
+3. Viết toàn bộ database schema thành file /supabase/schema.sql, gồm các bảng sau
+   (đừng chạy trực tiếp — tạo file để tôi tự copy dán vào Supabase SQL Editor):
+
+   - users (id uuid PK references auth.users, email, full_name, phone, 
+     role text check in ('tenant','landlord','admin') default 'tenant',
+     avatar_url, status text check in ('active','banned') default 'active',
+     verified_badge boolean default false,
+     vip_tier text check in ('none','dong','bac','vang','kim_cuong') default 'none',
+     created_at)
+
+   - listings (id, user_id FK, title, description, price numeric, area numeric,
+     address, district, city, type text check in ('room','apartment','condo','house','dormitory'),
+     images text[], amenities text[], lifestyle_conditions text[],
+     status text check in ('pending','active','hidden','rejected') default 'pending',
+     tier text check in ('normal','C','B','HOT_A') default 'normal',
+     reject_reason, view_count int default 0, last_pushed_at timestamptz, created_at)
+
+   - favorites (id, user_id FK, listing_id FK, created_at, unique(user_id, listing_id))
+
+   - roommate_posts (id, user_id FK, type text check in ('find_room','find_person'),
+     budget numeric, district, gender, age int, occupation, lifestyle_tags text[],
+     has_pet boolean, smoking boolean, description, status default 'active', created_at)
+
+   - reviews (id, reviewer_id FK, reviewee_id FK, listing_id FK, 
+     rating int check between 1 and 5, criteria text[], comment, created_at)
+
+   - notifications (id, user_id FK, type, title, message, is_read boolean default false, created_at)
+
+   - reports (id, reporter_id FK, target_type text check in ('user','listing'), 
+     target_id uuid, reason, status default 'pending', created_at)
+
+   - community_posts (id, user_id FK, title, content, 
+     category text check in ('guide','warning','roommate','finance'),
+     thumbnail_url, view_count int default 0, status default 'published', created_at)
+
+   - community_comments (id, post_id FK, user_id FK, content, created_at)
+
+   Bật RLS cơ bản: user chỉ sửa/xoá được dữ liệu của chính mình, admin có full quyền.
+
+4. Tạo trang chủ tạm (health check: hiển thị "ROOMSY — Coming soon" đúng theme màu).
+
+5. Push code lên GitHub, kết nối Vercel, deploy thử để xác nhận pipeline hoạt động.
+
+Hỏi tôi Supabase URL/keys khi cần. Sau khi xong, đưa tôi nội dung file schema.sql để tôi paste vào Supabase SQL Editor chạy 1 lần.

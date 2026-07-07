@@ -316,3 +316,34 @@ create policy "community_comments_update_own_or_admin"
 create policy "community_comments_delete_own_or_admin"
   on public.community_comments for delete
   using (auth.uid() = user_id or public.is_admin());
+
+-- --------------------------------------------------- storage.listing-images
+-- Bucket 'listing-images' phải được tạo thủ công (Public) trong Supabase Storage trước.
+-- Path convention: <user_id>/<filename> (xem components/listings/ListingForm.tsx)
+create policy "listing_images_select_all"
+  on storage.objects for select
+  using (bucket_id = 'listing-images');
+
+create policy "listing_images_insert_own"
+  on storage.objects for insert
+  to authenticated
+  with check (
+    bucket_id = 'listing-images'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+create policy "listing_images_update_own"
+  on storage.objects for update
+  to authenticated
+  using (
+    bucket_id = 'listing-images'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+create policy "listing_images_delete_own"
+  on storage.objects for delete
+  to authenticated
+  using (
+    bucket_id = 'listing-images'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );

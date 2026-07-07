@@ -1,0 +1,24 @@
+Build Auth + vòng lặp lõi cho ROOMSY. Dùng các bảng đã tạo ở schema.sql (users, listings, favorites).
+1. AUTH
+   - Đăng ký: form theo role (tenant/landlord) → supabase.auth.signUp → tạo row trong bảng users
+   - Đăng nhập: supabase.auth.signInWithPassword
+   - Middleware: bảo vệ route /dashboard/* theo đúng role; chặn user có status='banned'
+   - Sau đăng nhập: tenant & landlord → về Trang chủ; admin → vào thẳng /dashboard/admin
+2. TRANG CHỦ (/): fetch 8 listings status='active' mới nhất, search bar submit → /search?q=
+3. TÌM KIẾM (/search):
+   - Filter: city, district, khoảng giá, khoảng diện tích, type, amenities[], lifestyle_conditions[]
+   - Query Supabase kết hợp .eq()/.gte()/.lte()/.contains()
+   - Phân trang đơn giản (limit/offset)
+4. CHI TIẾT PHÒNG (/listings/[id]):
+   - Fetch 1 listing, tăng view_count (+1 mỗi lần load)
+   - Nút "Lưu yêu thích" → toggle bảng favorites
+   - Nút "Liên hệ" → hiện SĐT người đăng (từ users.phone), không cần chat real-time
+5. ĐĂNG TIN (landlord only, /dashboard/landlord/listings/new):
+   - Form 3 bước → lưu vào listings (status='pending', tier='normal' mặc định)
+   - Upload ảnh lên Supabase Storage bucket 'listing-images'
+6. QUẢN LÝ TIN (/dashboard/landlord/listings):
+   - List tin của chính user đó, filter theo status
+   - Sửa / Xoá / Tạm ẩn (status → 'hidden')
+7. SEED DATA:
+   - 3 tài khoản demo: 1 tenant, 1 landlord, 1 admin — password: Demo@123
+   - 10 listings mẫu (mix city TP.HCM/Hà Nội/Đà Nẵng, mix type, vài cái status='pending' để test duyệt tin ở Giai đoạn 3)

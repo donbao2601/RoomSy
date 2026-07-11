@@ -1,3 +1,6 @@
+import { t } from "@/lib/i18n/translate";
+import type { Locale } from "@/lib/i18n/locale";
+
 export function formatPrice(price: number | null) {
   if (price == null) return "Thoả thuận";
   return `${new Intl.NumberFormat("vi-VN").format(price)} đ/tháng`;
@@ -22,6 +25,15 @@ export const STATUS_LABELS: Record<string, string> = {
   hidden: "Đã ẩn",
   rejected: "Bị từ chối",
 };
+
+export function typeLabel(locale: Locale, type: string | null) {
+  if (!type) return "";
+  return t(locale, `type.${type}`);
+}
+
+export function statusLabel(locale: Locale, status: string) {
+  return t(locale, `status.${status}`);
+}
 
 export const STATUS_COLORS: Record<string, string> = {
   pending: "bg-amber-100 text-amber-700",

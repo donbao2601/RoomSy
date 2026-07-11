@@ -17,5 +17,12 @@ export type Listing = {
   reject_reason: string | null;
   view_count: number;
   last_pushed_at: string | null;
+  promoted_until: string | null;
+  expires_at: string;
   created_at: string;
+};
+
+/** Listing kèm vip_tier của chủ tin — dùng ở trang chủ/tìm kiếm để hiện huy hiệu VIP. */
+export type ListingWithOwner = Listing & {
+  owner: { vip_tier: string; vip_expires_at: string | null } | null;
 };

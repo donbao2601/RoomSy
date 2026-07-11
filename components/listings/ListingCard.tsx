@@ -1,11 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Listing } from "@/lib/types";
-import { formatArea, formatPrice, TYPE_LABELS } from "@/lib/format";
+import type { ListingWithOwner } from "@/lib/types";
+import { formatArea, formatPrice, typeLabel } from "@/lib/format";
+import { t } from "@/lib/i18n/translate";
+import type { Locale } from "@/lib/i18n/locale";
+import { effectiveTier } from "@/lib/promotion";
+import { PromotionBadge } from "@/components/listings/PromotionBadge";
+import { VipBadge } from "@/components/vip/VipBadge";
 
-export function ListingCard({ listing }: { listing: Listing }) {
+export function ListingCard({
+  listing,
+  locale = "vi",
+}: {
+  listing: ListingWithOwner;
+  locale?: Locale;
+}) {
   const cover = listing.images?.[0];
   const location = [listing.district, listing.city].filter(Boolean).join(", ");
+  const tier = effectiveTier(listing);
 
   return (
     <Link
@@ -22,28 +34,39 @@ export function ListingCard({ listing }: { listing: Listing }) {
             sizes="(max-width: 768px) 50vw, 25vw"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-sm text-neutral-400">
-            Chưa có ảnh
+          <div className="flex h-full items-center justify-center text-sm text-muted">
+            {t(locale, "listing.noImage")}
           </div>
         )}
         {listing.type && (
           <span className="absolute left-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-xs font-medium text-primary">
-            {TYPE_LABELS[listing.type] ?? listing.type}
+            {typeLabel(locale, listing.type)}
+          </span>
+        )}
+        {tier !== "normal" && (
+          <span className="absolute right-2 top-2">
+            <PromotionBadge tier={tier} locale={locale} />
           </span>
         )}
       </div>
       <div className="p-3">
-        <h3 className="line-clamp-2 text-sm font-semibold text-neutral-800">
+        <h3 className="line-clamp-2 text-sm font-semibold text-ink">
           {listing.title}
         </h3>
         <p className="mt-1 text-sm font-bold text-primary">
           {formatPrice(listing.price)}
         </p>
-        <p className="mt-1 truncate text-xs text-neutral-500">
+        <p className="mt-1 truncate text-xs text-body">
           {formatArea(listing.area)}
           {listing.area && location ? " · " : ""}
           {location}
         </p>
+        {listing.owner && (
+          <VipBadge
+            vip_tier={listing.owner.vip_tier}
+            vip_expires_at={listing.owner.vip_expires_at}
+          />
+        )}
       </div>
     </Link>
   );

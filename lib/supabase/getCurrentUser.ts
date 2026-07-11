@@ -10,6 +10,7 @@ export type CurrentUser = {
   status: "active" | "banned";
   verified_badge: boolean;
   vip_tier: string;
+  vip_expires_at: string | null;
 };
 
 /** Server-side helper: returns the signed-in user's `public.users` row, or null. */
@@ -25,7 +26,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   const { data } = await supabase
     .from("users")
     .select(
-      "id, email, full_name, phone, role, avatar_url, status, verified_badge, vip_tier"
+      "id, email, full_name, phone, role, avatar_url, status, verified_badge, vip_tier, vip_expires_at"
     )
     .eq("id", user.id)
     .single();

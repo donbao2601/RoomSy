@@ -110,6 +110,12 @@ async function upsertProfile(id, account) {
     phone: account.phone,
     role: account.role,
     vip_tier: account.vip_tier,
+    // Tài khoản demo VIP cần vip_expires_at trong tương lai, nếu không
+    // effectiveVipTier() sẽ coi là hết hạn và fallback về 'none'.
+    vip_expires_at:
+      account.vip_tier !== "none"
+        ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        : null,
     status: "active",
   });
   if (error) throw error;
@@ -303,19 +309,33 @@ const SAMPLE_LISTINGS = [
   },
 ];
 
+// Gán sẵn quảng bá cho vài tin mẫu (status='active') để demo badge + sort ưu
+// tiên ngay sau khi seed, không cần thao tác tay qua trang /promote.
+const PROMOTED_SAMPLE_INDEXES = { 0: "HOT_A", 1: "B", 7: "C" };
+
 async function seedListings(landlordId) {
   await admin.from("listings").delete().eq("user_id", landlordId);
 
-  const rows = SAMPLE_LISTINGS.map((listing) => ({
-    ...listing,
-    user_id: landlordId,
-    images: [],
-    tier: "normal",
-  }));
+  const promotedUntil = new Date(
+    Date.now() + 7 * 24 * 60 * 60 * 1000
+  ).toISOString();
+
+  const rows = SAMPLE_LISTINGS.map((listing, i) => {
+    const promoTier = PROMOTED_SAMPLE_INDEXES[i];
+    return {
+      ...listing,
+      user_id: landlordId,
+      images: [],
+      tier: promoTier ?? "normal",
+      promoted_until: promoTier ? promotedUntil : null,
+    };
+  });
 
   const { error } = await admin.from("listings").insert(rows);
   if (error) throw error;
-  console.log(`- Đã tạo ${rows.length} tin đăng mẫu.`);
+  console.log(
+    `- Đã tạo ${rows.length} tin đăng mẫu (3 tin đã gán sẵn quảng bá HOT A/B/C để demo).`
+  );
 }
 
 async function main() {

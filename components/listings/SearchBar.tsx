@@ -2,9 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useLanguage } from "@/lib/i18n/LanguageProvider";
 
 export function SearchBar() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [q, setQ] = useState("");
 
   function handleSubmit(e: React.FormEvent) {
@@ -22,14 +24,14 @@ export function SearchBar() {
       <input
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        placeholder="Tìm theo khu vực, tên phòng..."
+        placeholder={t("home.searchPlaceholder")}
         className="input"
       />
       <button
         type="submit"
         className="shrink-0 rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-white hover:opacity-90"
       >
-        Tìm kiếm
+        {t("home.searchButton")}
       </button>
     </form>
   );

@@ -168,162 +168,251 @@ as $$
   );
 $$;
 
+-- Toàn bộ policy dưới đây dùng "drop policy if exists" trước "create policy"
+-- để cả file chạy lại được nhiều lần / trên DB đã có sẵn dữ liệu mà không lỗi
+-- "policy already exists".
+
 -- ---------------------------------------------------------------- users
+drop policy if exists "users_select_all" on public.users;
 create policy "users_select_all"
   on public.users for select
   using (true);
 
+drop policy if exists "users_update_own_or_admin" on public.users;
 create policy "users_update_own_or_admin"
   on public.users for update
   using (auth.uid() = id or public.is_admin());
 
+drop policy if exists "users_insert_own" on public.users;
 create policy "users_insert_own"
   on public.users for insert
   with check (auth.uid() = id);
 
+drop policy if exists "users_delete_admin" on public.users;
 create policy "users_delete_admin"
   on public.users for delete
   using (public.is_admin());
 
 -- ------------------------------------------------------------- listings
+drop policy if exists "listings_select_all" on public.listings;
 create policy "listings_select_all"
   on public.listings for select
   using (true);
 
+drop policy if exists "listings_insert_own" on public.listings;
 create policy "listings_insert_own"
   on public.listings for insert
   with check (auth.uid() = user_id);
 
+drop policy if exists "listings_update_own_or_admin" on public.listings;
 create policy "listings_update_own_or_admin"
   on public.listings for update
   using (auth.uid() = user_id or public.is_admin());
 
+drop policy if exists "listings_delete_own_or_admin" on public.listings;
 create policy "listings_delete_own_or_admin"
   on public.listings for delete
   using (auth.uid() = user_id or public.is_admin());
 
 -- ------------------------------------------------------------ favorites
+drop policy if exists "favorites_select_own_or_admin" on public.favorites;
 create policy "favorites_select_own_or_admin"
   on public.favorites for select
   using (auth.uid() = user_id or public.is_admin());
 
+drop policy if exists "favorites_insert_own" on public.favorites;
 create policy "favorites_insert_own"
   on public.favorites for insert
   with check (auth.uid() = user_id);
 
+drop policy if exists "favorites_delete_own_or_admin" on public.favorites;
 create policy "favorites_delete_own_or_admin"
   on public.favorites for delete
   using (auth.uid() = user_id or public.is_admin());
 
 -- -------------------------------------------------------- roommate_posts
+drop policy if exists "roommate_posts_select_all" on public.roommate_posts;
 create policy "roommate_posts_select_all"
   on public.roommate_posts for select
   using (true);
 
+drop policy if exists "roommate_posts_insert_own" on public.roommate_posts;
 create policy "roommate_posts_insert_own"
   on public.roommate_posts for insert
   with check (auth.uid() = user_id);
 
+drop policy if exists "roommate_posts_update_own_or_admin" on public.roommate_posts;
 create policy "roommate_posts_update_own_or_admin"
   on public.roommate_posts for update
   using (auth.uid() = user_id or public.is_admin());
 
+drop policy if exists "roommate_posts_delete_own_or_admin" on public.roommate_posts;
 create policy "roommate_posts_delete_own_or_admin"
   on public.roommate_posts for delete
   using (auth.uid() = user_id or public.is_admin());
 
 -- --------------------------------------------------------------- reviews
+drop policy if exists "reviews_select_all" on public.reviews;
 create policy "reviews_select_all"
   on public.reviews for select
   using (true);
 
+drop policy if exists "reviews_insert_own" on public.reviews;
 create policy "reviews_insert_own"
   on public.reviews for insert
   with check (auth.uid() = reviewer_id);
 
+drop policy if exists "reviews_update_own_or_admin" on public.reviews;
 create policy "reviews_update_own_or_admin"
   on public.reviews for update
   using (auth.uid() = reviewer_id or public.is_admin());
 
+drop policy if exists "reviews_delete_own_or_admin" on public.reviews;
 create policy "reviews_delete_own_or_admin"
   on public.reviews for delete
   using (auth.uid() = reviewer_id or public.is_admin());
 
 -- --------------------------------------------------------- notifications
+drop policy if exists "notifications_select_own_or_admin" on public.notifications;
 create policy "notifications_select_own_or_admin"
   on public.notifications for select
   using (auth.uid() = user_id or public.is_admin());
 
+drop policy if exists "notifications_update_own_or_admin" on public.notifications;
 create policy "notifications_update_own_or_admin"
   on public.notifications for update
   using (auth.uid() = user_id or public.is_admin());
 
+drop policy if exists "notifications_delete_own_or_admin" on public.notifications;
 create policy "notifications_delete_own_or_admin"
   on public.notifications for delete
   using (auth.uid() = user_id or public.is_admin());
 
+drop policy if exists "notifications_insert_admin" on public.notifications;
 create policy "notifications_insert_admin"
   on public.notifications for insert
   with check (public.is_admin());
 
 -- --------------------------------------------------------------- reports
+drop policy if exists "reports_select_own_or_admin" on public.reports;
 create policy "reports_select_own_or_admin"
   on public.reports for select
   using (auth.uid() = reporter_id or public.is_admin());
 
+drop policy if exists "reports_insert_own" on public.reports;
 create policy "reports_insert_own"
   on public.reports for insert
   with check (auth.uid() = reporter_id);
 
+drop policy if exists "reports_update_admin" on public.reports;
 create policy "reports_update_admin"
   on public.reports for update
   using (public.is_admin());
 
+drop policy if exists "reports_delete_own_or_admin" on public.reports;
 create policy "reports_delete_own_or_admin"
   on public.reports for delete
   using (auth.uid() = reporter_id or public.is_admin());
 
 -- -------------------------------------------------------- community_posts
+drop policy if exists "community_posts_select_all" on public.community_posts;
 create policy "community_posts_select_all"
   on public.community_posts for select
   using (true);
 
+drop policy if exists "community_posts_insert_own" on public.community_posts;
 create policy "community_posts_insert_own"
   on public.community_posts for insert
   with check (auth.uid() = user_id);
 
+drop policy if exists "community_posts_update_own_or_admin" on public.community_posts;
 create policy "community_posts_update_own_or_admin"
   on public.community_posts for update
   using (auth.uid() = user_id or public.is_admin());
 
+drop policy if exists "community_posts_delete_own_or_admin" on public.community_posts;
 create policy "community_posts_delete_own_or_admin"
   on public.community_posts for delete
   using (auth.uid() = user_id or public.is_admin());
 
 -- ----------------------------------------------------- community_comments
+drop policy if exists "community_comments_select_all" on public.community_comments;
 create policy "community_comments_select_all"
   on public.community_comments for select
   using (true);
 
+drop policy if exists "community_comments_insert_own" on public.community_comments;
 create policy "community_comments_insert_own"
   on public.community_comments for insert
   with check (auth.uid() = user_id);
 
+drop policy if exists "community_comments_update_own_or_admin" on public.community_comments;
 create policy "community_comments_update_own_or_admin"
   on public.community_comments for update
   using (auth.uid() = user_id or public.is_admin());
 
+drop policy if exists "community_comments_delete_own_or_admin" on public.community_comments;
 create policy "community_comments_delete_own_or_admin"
   on public.community_comments for delete
+  using (auth.uid() = user_id or public.is_admin());
+
+-- ============================================================================
+-- Giai đoạn 2 — VIP membership, quảng bá tin, đẩy tin
+-- Chạy 1 lần trong Supabase SQL Editor (nối tiếp phần trên).
+-- ============================================================================
+
+-- users: hạn dùng gói VIP hiện tại (vip_tier đã có từ GĐ0)
+alter table public.users add column if not exists vip_expires_at timestamptz;
+
+-- listings: hạn hiển thị 30 ngày + hạn quảng bá 7 ngày.
+-- listings.tier (normal/C/B/HOT_A, đã có từ GĐ0) được tái sử dụng làm loại quảng bá.
+-- listings.last_pushed_at (đã có từ GĐ0) được tái sử dụng làm mốc đẩy tin gần nhất.
+--
+-- expires_at KHÔNG dùng generated column: "timestamptz + interval" không phải
+-- immutable trong Postgres (phụ thuộc session timezone khi cộng ngày/tháng),
+-- nên "generated always as (...)" bị lỗi 42P17. Dùng default thường thay thế —
+-- vì created_at cũng default now(), cả 2 cột cùng lấy chung 1 giá trị now()
+-- của transaction lúc insert nên expires_at luôn = created_at + 30 ngày cho
+-- mọi dòng mới. (Dòng cũ nếu có từ lần chạy trước sẽ được set theo now() lúc
+-- ALTER chạy, không lệch nhiều vì hiện tại toàn bộ 10 tin mẫu sẽ được seed lại.)
+alter table public.listings add column if not exists expires_at timestamptz
+  not null default (now() + interval '30 days');
+alter table public.listings add column if not exists promoted_until timestamptz;
+
+-- vip_quota_usage: theo dõi số lượt Tin C/B/HOT A miễn phí + đẩy tin miễn phí
+-- đã dùng trong tháng hiện tại theo từng user (period dạng 'YYYY-MM').
+create table if not exists public.vip_quota_usage (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.users (id) on delete cascade,
+  period text not null,
+  c_used int not null default 0,
+  b_used int not null default 0,
+  hot_a_used int not null default 0,
+  boost_used int not null default 0,
+  updated_at timestamptz not null default now(),
+  unique (user_id, period)
+);
+
+alter table public.vip_quota_usage enable row level security;
+
+-- Chỉ cho phép đọc quota của chính mình (hoặc admin). Không có policy
+-- insert/update cho user thường — mọi thay đổi quota đi qua route service-role
+-- (app/api/vip/upgrade, app/api/listings/[id]/promote|boost) để enforce đúng
+-- giới hạn gói + cooldown đẩy tin server-side, tránh user tự sửa số đã dùng.
+drop policy if exists "vip_quota_usage_select_own_or_admin" on public.vip_quota_usage;
+create policy "vip_quota_usage_select_own_or_admin"
+  on public.vip_quota_usage for select
   using (auth.uid() = user_id or public.is_admin());
 
 -- --------------------------------------------------- storage.listing-images
 -- Bucket 'listing-images' phải được tạo thủ công (Public) trong Supabase Storage trước.
 -- Path convention: <user_id>/<filename> (xem components/listings/ListingForm.tsx)
+drop policy if exists "listing_images_select_all" on storage.objects;
 create policy "listing_images_select_all"
   on storage.objects for select
   using (bucket_id = 'listing-images');
 
+drop policy if exists "listing_images_insert_own" on storage.objects;
 create policy "listing_images_insert_own"
   on storage.objects for insert
   to authenticated
@@ -332,6 +421,7 @@ create policy "listing_images_insert_own"
     and (storage.foldername(name))[1] = auth.uid()::text
   );
 
+drop policy if exists "listing_images_update_own" on storage.objects;
 create policy "listing_images_update_own"
   on storage.objects for update
   to authenticated
@@ -340,6 +430,7 @@ create policy "listing_images_update_own"
     and (storage.foldername(name))[1] = auth.uid()::text
   );
 
+drop policy if exists "listing_images_delete_own" on storage.objects;
 create policy "listing_images_delete_own"
   on storage.objects for delete
   to authenticated

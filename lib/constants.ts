@@ -26,3 +26,59 @@ export const LIFESTYLE_CONDITIONS = [
   { value: "khong_hut_thuoc", label: "Không hút thuốc" },
   { value: "phu_hop_gia_dinh", label: "Phù hợp gia đình" },
 ] as const;
+
+/** 5 gói hội viên VIP — giá theo 30 ngày, quota miễn phí/tháng theo đúng bảng quyền lợi. */
+export const VIP_TIERS = [
+  {
+    value: "none",
+    label: "Thường",
+    price: 0,
+    quota: { C: 0, B: 0, HOT_A: 0, boost: 0 },
+    priorityReview: false,
+    badge: false,
+  },
+  {
+    value: "dong",
+    label: "VIP Đồng",
+    price: 99000,
+    quota: { C: 2, B: 1, HOT_A: 0, boost: 2 },
+    priorityReview: true,
+    badge: true,
+  },
+  {
+    value: "bac",
+    label: "VIP Bạc",
+    price: 199000,
+    quota: { C: 5, B: 3, HOT_A: 1, boost: 5 },
+    priorityReview: true,
+    badge: true,
+  },
+  {
+    value: "vang",
+    label: "VIP Vàng",
+    price: 299000,
+    quota: { C: 10, B: 5, HOT_A: 3, boost: 10 },
+    priorityReview: true,
+    badge: true,
+    popular: true,
+  },
+  {
+    value: "kim_cuong",
+    label: "VIP Kim Cương",
+    price: 499000,
+    quota: { C: 20, B: 10, HOT_A: 5, boost: 20 },
+    priorityReview: true,
+    badge: true,
+  },
+] as const;
+
+/** 4 mức quảng bá tin đăng — giá + style hiển thị theo đúng bảng trong tài liệu. */
+export const PROMOTION_TIERS = [
+  { value: "C", label: "Tin C", price: 20000 },
+  { value: "B", label: "Tin B", price: 50000 },
+  { value: "HOT_A", label: "Tin HOT A", price: 100000 },
+] as const;
+
+export const PROMOTION_DURATION_DAYS = 7;
+export const BOOST_PRICE = 20000;
+export const BOOST_COOLDOWN_MINUTES = 60;

@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ListingCard } from "@/components/listings/ListingCard";
-import type { Listing } from "@/lib/types";
+import type { ListingWithOwner } from "@/lib/types";
+import { getLocale } from "@/lib/i18n/getLocale";
+import { t } from "@/lib/i18n/translate";
+import { typeLabel } from "@/lib/format";
+import { effectiveTier, TIER_PRIORITY } from "@/lib/promotion";
 import {
   AMENITIES,
   CITIES,
@@ -10,6 +14,10 @@ import {
 } from "@/lib/constants";
 
 const PAGE_SIZE = 12;
+// Dữ liệu demo nhỏ nên fetch toàn bộ kết quả đã filter rồi sort/paginate trong
+// JS (để sort được theo tier quảng bá hiệu lực + đẩy tin — điều Supabase query
+// builder không diễn đạt trực tiếp được). Cap an toàn, không phải giới hạn thật.
+const FETCH_CAP = 500;
 
 type SearchParams = { [key: string]: string | string[] | undefined };
 
@@ -27,6 +35,7 @@ export default async function SearchPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const locale = getLocale();
   const q = first(searchParams.q) ?? "";
   const city = first(searchParams.city) ?? "";
   const district = first(searchParams.district) ?? "";
@@ -42,7 +51,7 @@ export default async function SearchPage({
   const supabase = createClient();
   let query = supabase
     .from("listings")
-    .select("*", { count: "exact" })
+    .select("*, owner:users(vip_tier, vip_expires_at)")
     .eq("status", "active");
 
   if (q) query = query.ilike("title", `%${q}%`);
@@ -57,14 +66,29 @@ export default async function SearchPage({
   if (lifestyle.length)
     query = query.contains("lifestyle_conditions", lifestyle);
 
-  const offset = (page - 1) * PAGE_SIZE;
-  query = query.order("created_at", { ascending: false }).range(
-    offset,
-    offset + PAGE_SIZE - 1
-  );
+  const { data } = await query
+    .order("created_at", { ascending: false })
+    .limit(FETCH_CAP);
 
-  const { data: listings, count } = await query;
-  const totalPages = Math.max(1, Math.ceil((count ?? 0) / PAGE_SIZE));
+  const all = (data as unknown as ListingWithOwner[]) ?? [];
+
+  // Sort ưu tiên: HOT A > B > C > Thường (chỉ tính khi còn hiệu lực), phụ theo
+  // last_pushed_at (đẩy tin gần nhất lên đầu), rồi tin mới nhất.
+  const sorted = [...all].sort((a, b) => {
+    const tierDiff = TIER_PRIORITY[effectiveTier(a)] - TIER_PRIORITY[effectiveTier(b)];
+    if (tierDiff !== 0) return tierDiff;
+
+    const aPushed = a.last_pushed_at ? new Date(a.last_pushed_at).getTime() : 0;
+    const bPushed = b.last_pushed_at ? new Date(b.last_pushed_at).getTime() : 0;
+    if (aPushed !== bPushed) return bPushed - aPushed;
+
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+
+  const count = sorted.length;
+  const totalPages = Math.max(1, Math.ceil(count / PAGE_SIZE));
+  const offset = (page - 1) * PAGE_SIZE;
+  const listings = sorted.slice(offset, offset + PAGE_SIZE);
 
   function pageHref(target: number) {
     const params = new URLSearchParams();
@@ -88,18 +112,18 @@ export default async function SearchPage({
         <aside className="h-fit rounded-xl bg-white p-4 shadow-sm">
           <form method="get" className="space-y-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-neutral-700">
-                Từ khoá
+              <label className="mb-1 block text-sm font-medium text-body">
+                {t(locale, "search.keyword")}
               </label>
               <input name="q" defaultValue={q} className="input" />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-neutral-700">
-                Thành phố
+              <label className="mb-1 block text-sm font-medium text-body">
+                {t(locale, "search.city")}
               </label>
               <select name="city" defaultValue={city} className="input">
-                <option value="">Tất cả</option>
+                <option value="">{t(locale, "search.all")}</option>
                 {CITIES.map((c) => (
                   <option key={c} value={c}>
                     {c}
@@ -109,21 +133,21 @@ export default async function SearchPage({
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-neutral-700">
-                Quận/Huyện
+              <label className="mb-1 block text-sm font-medium text-body">
+                {t(locale, "search.district")}
               </label>
               <input name="district" defaultValue={district} className="input" />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-neutral-700">
-                Loại hình
+              <label className="mb-1 block text-sm font-medium text-body">
+                {t(locale, "search.type")}
               </label>
               <select name="type" defaultValue={type} className="input">
-                <option value="">Tất cả</option>
-                {LISTING_TYPES.map((t) => (
-                  <option key={t.value} value={t.value}>
-                    {t.label}
+                <option value="">{t(locale, "search.all")}</option>
+                {LISTING_TYPES.map((tp) => (
+                  <option key={tp.value} value={tp.value}>
+                    {typeLabel(locale, tp.value)}
                   </option>
                 ))}
               </select>
@@ -131,8 +155,8 @@ export default async function SearchPage({
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="mb-1 block text-sm font-medium text-neutral-700">
-                  Giá từ
+                <label className="mb-1 block text-sm font-medium text-body">
+                  {t(locale, "search.priceFrom")}
                 </label>
                 <input
                   type="number"
@@ -142,8 +166,8 @@ export default async function SearchPage({
                 />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-neutral-700">
-                  Giá đến
+                <label className="mb-1 block text-sm font-medium text-body">
+                  {t(locale, "search.priceTo")}
                 </label>
                 <input
                   type="number"
@@ -156,8 +180,8 @@ export default async function SearchPage({
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="mb-1 block text-sm font-medium text-neutral-700">
-                  DT từ (m²)
+                <label className="mb-1 block text-sm font-medium text-body">
+                  {t(locale, "search.areaFrom")}
                 </label>
                 <input
                   type="number"
@@ -167,8 +191,8 @@ export default async function SearchPage({
                 />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-neutral-700">
-                  DT đến (m²)
+                <label className="mb-1 block text-sm font-medium text-body">
+                  {t(locale, "search.areaTo")}
                 </label>
                 <input
                   type="number"
@@ -180,14 +204,14 @@ export default async function SearchPage({
             </div>
 
             <fieldset>
-              <legend className="mb-1 text-sm font-medium text-neutral-700">
-                Tiện ích
+              <legend className="mb-1 text-sm font-medium text-body">
+                {t(locale, "search.amenities")}
               </legend>
               <div className="space-y-1">
                 {AMENITIES.map((a) => (
                   <label
                     key={a.value}
-                    className="flex items-center gap-2 text-sm text-neutral-600"
+                    className="flex items-center gap-2 text-sm text-body"
                   >
                     <input
                       type="checkbox"
@@ -202,14 +226,14 @@ export default async function SearchPage({
             </fieldset>
 
             <fieldset>
-              <legend className="mb-1 text-sm font-medium text-neutral-700">
-                Điều kiện sống
+              <legend className="mb-1 text-sm font-medium text-body">
+                {t(locale, "search.lifestyle")}
               </legend>
               <div className="space-y-1">
                 {LIFESTYLE_CONDITIONS.map((l) => (
                   <label
                     key={l.value}
-                    className="flex items-center gap-2 text-sm text-neutral-600"
+                    className="flex items-center gap-2 text-sm text-body"
                   >
                     <input
                       type="checkbox"
@@ -227,26 +251,24 @@ export default async function SearchPage({
               type="submit"
               className="w-full rounded-lg bg-primary py-2 text-sm font-semibold text-white hover:opacity-90"
             >
-              Áp dụng bộ lọc
+              {t(locale, "search.apply")}
             </button>
           </form>
         </aside>
 
         <section>
-          <p className="mb-4 text-sm text-neutral-600">
-            {count ?? 0} kết quả phù hợp
+          <p className="mb-4 text-sm text-body">
+            {count} {t(locale, "search.results")}
           </p>
 
-          {listings && listings.length > 0 ? (
+          {listings.length > 0 ? (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-              {(listings as Listing[]).map((listing) => (
-                <ListingCard key={listing.id} listing={listing} />
+              {listings.map((listing) => (
+                <ListingCard key={listing.id} listing={listing} locale={locale} />
               ))}
             </div>
           ) : (
-            <p className="text-sm text-neutral-500">
-              Không tìm thấy tin đăng phù hợp.
-            </p>
+            <p className="text-sm text-body">{t(locale, "search.noResults")}</p>
           )}
 
           {totalPages > 1 && (
@@ -259,7 +281,7 @@ export default async function SearchPage({
                     className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
                       p === page
                         ? "bg-primary text-white"
-                        : "bg-white text-neutral-600 hover:bg-neutral-100"
+                        : "bg-white text-body hover:bg-background"
                     }`}
                   >
                     {p}

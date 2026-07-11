@@ -2,9 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useLanguage } from "@/lib/i18n/LanguageProvider";
 
 export function SignOutButton() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -16,9 +18,9 @@ export function SignOutButton() {
   return (
     <button
       onClick={handleSignOut}
-      className="rounded-lg px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-background"
+      className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
     >
-      Đăng xuất
+      {t("nav.signOut")}
     </button>
   );
 }

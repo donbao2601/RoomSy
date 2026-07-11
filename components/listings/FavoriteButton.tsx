@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useLanguage } from "@/lib/i18n/LanguageProvider";
 
 export function FavoriteButton({
   listingId,
@@ -14,6 +15,7 @@ export function FavoriteButton({
   initialFavorited: boolean;
 }) {
   const router = useRouter();
+  const { t } = useLanguage();
   const [favorited, setFavorited] = useState(initialFavorited);
   const [isPending, startTransition] = useTransition();
 
@@ -52,7 +54,7 @@ export function FavoriteButton({
           : "border-neutral-300 text-neutral-700 hover:bg-neutral-50"
       }`}
     >
-      {favorited ? "★ Đã lưu" : "☆ Lưu yêu thích"}
+      {favorited ? `★ ${t("listing.saved")}` : `☆ ${t("listing.save")}`}
     </button>
   );
 }

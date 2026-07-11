@@ -17,8 +17,14 @@ const config: Config = {
     },
     extend: {
       colors: {
-        primary: "#15915A",
-        background: "#F4F8F6",
+        primary: "#3F4A1F",
+        "primary-dark": "#2E3717",
+        background: "#EDF0DF",
+        ink: "#1A2410",
+        body: "#55604A",
+        muted: "#8D9280",
+        line: "#E5E8D9",
+        gold: "#F5A524",
         foreground: "var(--foreground)",
       },
       fontFamily: {

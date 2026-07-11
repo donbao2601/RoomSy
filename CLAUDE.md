@@ -1,4 +1,4 @@
-# CLAUDE.md — ROOMSY Project Context
+ # CLAUDE.md — ROOMSY Project Context
 
 > File này giúp Claude Code tự động nạp context khi mở project — không cần dán lại thông tin mỗi phiên làm việc mới.
 
@@ -14,8 +14,15 @@ Deadline: 17/7/2026 (đồ án tốt nghiệp — cần sản phẩm web thật,
 - Hosting: Vercel
 
 ## Design tokens
-- Primary color: `#15915A`
-- Background: `#F4F8F6`
+- Primary: `#3F4A1F`
+- Primary dark: `#2E3717`
+- Background: `#EDF0DF`
+- Ink (text đậm): `#1A2410`
+- Body (text thường): `#55604A`
+- Muted (text phụ/disabled): `#8D9280`
+- Line (border/divider): `#E5E8D9`
+- Gold accent (badge/highlight): `#F5A524`
+- Orange: `#F97316` (chưa rõ mục đích — KHÔNG dùng cho tính năng mới trừ khi được yêu cầu rõ)
 - Font: `Be Vietnam Pro` (import từ Google Fonts trong layout gốc)
 - Mobile-first breakpoints
 

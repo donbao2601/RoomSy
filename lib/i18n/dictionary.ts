@@ -120,6 +120,28 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "gender.nu": "Nữ",
     "gender.khong_yeu_cau": "Không yêu cầu",
 
+    // reviews (Đánh giá 2 chiều — GĐ4 Nhóm 2, prototype)
+    "review.title": "Đánh giá",
+    "review.summary": "đánh giá",
+    "review.noReviews": "Chưa có đánh giá nào.",
+    "review.formTitle": "Viết đánh giá",
+    "review.formRating": "Số sao",
+    "review.formCriteria": "Tiêu chí",
+    "review.formComment": "Nhận xét",
+    "review.formSubmit": "Gửi đánh giá",
+    "review.formSaving": "Đang gửi...",
+    "review.formSelfError": "Bạn không thể tự đánh giá chính mình.",
+    "review.formRatingRequired": "Vui lòng chọn số sao.",
+    "review.loginRequired": "Đăng nhập để viết đánh giá.",
+    "review.prototypeNote":
+      "Bản demo: cho phép đánh giá tự do, chưa ràng buộc đã thuê/đã liên hệ.",
+    "review.criteria.dung_mo_ta": "Đúng như mô tả",
+    "review.criteria.chu_nha_than_thien": "Chủ nhà thân thiện",
+    "review.criteria.an_ninh_tot": "An ninh tốt",
+    "review.criteria.dung_hen": "Đúng giờ hẹn",
+    "review.criteria.gia_hop_ly": "Giá hợp lý",
+    "dashboard.tenant.myReviewsEmpty": "Bạn chưa viết đánh giá nào.",
+
     // type labels
     "type.room": "Phòng trọ",
     "type.apartment": "Căn hộ",
@@ -428,6 +450,28 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "gender.nam": "Male",
     "gender.nu": "Female",
     "gender.khong_yeu_cau": "Any",
+
+    // reviews (Phase 4, Group 2 — prototype)
+    "review.title": "Reviews",
+    "review.summary": "reviews",
+    "review.noReviews": "No reviews yet.",
+    "review.formTitle": "Write a review",
+    "review.formRating": "Rating",
+    "review.formCriteria": "Criteria",
+    "review.formComment": "Comment",
+    "review.formSubmit": "Submit review",
+    "review.formSaving": "Submitting...",
+    "review.formSelfError": "You cannot review yourself.",
+    "review.formRatingRequired": "Please select a rating.",
+    "review.loginRequired": "Log in to write a review.",
+    "review.prototypeNote":
+      "Demo build: reviews are unrestricted, not yet tied to a completed rental/contact.",
+    "review.criteria.dung_mo_ta": "Matches description",
+    "review.criteria.chu_nha_than_thien": "Friendly landlord",
+    "review.criteria.an_ninh_tot": "Good security",
+    "review.criteria.dung_hen": "On time",
+    "review.criteria.gia_hop_ly": "Fair price",
+    "dashboard.tenant.myReviewsEmpty": "You haven't written any reviews yet.",
 
     "type.room": "Room",
     "type.apartment": "Apartment",

@@ -98,6 +98,15 @@ export const ROOMMATE_LIFESTYLE_TAGS = [
   { value: "sinh_vien_hoc_sinh", label: "Sinh viên/học sinh" },
 ] as const;
 
+/** Tiêu chí đánh giá (GĐ4 — Nhóm 2, prototype) — reviewer tự tick, chỉ để hiển thị dạng tag. */
+export const REVIEW_CRITERIA = [
+  { value: "dung_mo_ta", label: "Đúng như mô tả" },
+  { value: "chu_nha_than_thien", label: "Chủ nhà thân thiện" },
+  { value: "an_ninh_tot", label: "An ninh tốt" },
+  { value: "dung_hen", label: "Đúng giờ hẹn" },
+  { value: "gia_hop_ly", label: "Giá hợp lý" },
+] as const;
+
 /** 9 tiêu chí duyệt tin (GĐ3) — admin tự tick tay, không auto-validate. */
 export const LISTING_REVIEW_CRITERIA = [
   "admin.pending.criteria.address",

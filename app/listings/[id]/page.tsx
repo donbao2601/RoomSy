@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/supabase/getCurrentUser";
 import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { ContactButton } from "@/components/listings/ContactButton";
+import { ReviewsSection } from "@/components/reviews/ReviewsSection";
 import { PromotionBadge } from "@/components/listings/PromotionBadge";
 import { VipBadge } from "@/components/vip/VipBadge";
 import { formatArea, formatPrice, typeLabel } from "@/lib/format";
@@ -183,6 +184,12 @@ export default async function ListingDetailPage({
               </span>
             )}
           </div>
+
+          <ReviewsSection
+            listingId={listing.id}
+            revieweeId={listing.user_id}
+            currentUserId={currentUser?.id ?? null}
+          />
         </div>
       </div>
     </main>

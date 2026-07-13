@@ -52,3 +52,23 @@ export type RoommatePostWithAuthor = RoommatePost & {
     avatar_url: string | null;
   } | null;
 };
+
+/**
+ * Đánh giá 2 chiều (GĐ4 — Nhóm 2, PROTOTYPE-ONLY). Ghi thật vào bảng `reviews`
+ * có sẵn nhưng KHÔNG ràng buộc "đã tương tác" (đã thuê/đã liên hệ) — bất kỳ
+ * user đăng nhập nào cũng đánh giá tự do được, chỉ chặn tự đánh giá chính mình.
+ */
+export type Review = {
+  id: string;
+  reviewer_id: string;
+  reviewee_id: string;
+  listing_id: string | null;
+  rating: number;
+  criteria: string[];
+  comment: string | null;
+  created_at: string;
+};
+
+export type ReviewWithReviewer = Review & {
+  reviewer: { full_name: string | null; avatar_url: string | null } | null;
+};

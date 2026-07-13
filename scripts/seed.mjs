@@ -331,11 +331,14 @@ async function seedListings(landlordId) {
     };
   });
 
-  const { error } = await admin.from("listings").insert(rows);
+  const { data, error } = await admin.from("listings").insert(rows).select("id");
   if (error) throw error;
   console.log(
     `- Đã tạo ${rows.length} tin đăng mẫu (3 tin đã gán sẵn quảng bá HOT A/B/C để demo).`
   );
+  // Bulk insert 1 câu lệnh, không trigger nào can thiệp thứ tự -> data trả về
+  // theo đúng thứ tự rows đã gửi, dùng để gắn review mẫu vào đúng tin.
+  return data.map((row) => row.id);
 }
 
 // 8 tin ở ghép mẫu (GĐ4 — Nhóm 1, backend thật): find_room do tenant đăng
@@ -463,6 +466,35 @@ async function seedRoommatePosts(ids) {
   console.log(`- Đã tạo ${rows.length} tin ở ghép mẫu.`);
 }
 
+// 8 đánh giá mẫu (GĐ4 — Nhóm 2, PROTOTYPE-ONLY): reviewee cố định là user2
+// (landlord gốc, sở hữu 10 tin mẫu), reviewer là các demo account khác nhau.
+// listingIndex trỏ vào mảng id trả về từ seedListings (theo thứ tự SAMPLE_LISTINGS).
+const SAMPLE_REVIEWS = [
+  { email: "user1@roomsy.vn", listingIndex: 0, rating: 5, criteria: ["dung_mo_ta", "an_ninh_tot"], comment: "Phòng đúng như mô tả, khu vực an ninh, chủ nhà dễ chịu." },
+  { email: "user7@roomsy.vn", listingIndex: 1, rating: 4, criteria: ["chu_nha_than_thien", "gia_hop_ly"], comment: "Căn hộ ổn, giá hợp lý so với khu vực, chủ nhà thân thiện." },
+  { email: "user3@roomsy.vn", listingIndex: 3, rating: 5, criteria: ["dung_hen", "an_ninh_tot"], comment: "Chủ nhà đúng giờ hẹn xem phòng, khu chung cư an ninh tốt." },
+  { email: "user4@roomsy.vn", listingIndex: 4, rating: 3, criteria: ["gia_hop_ly"], comment: "Nhà rộng nhưng hơi xa trung tâm, giá thì ổn." },
+  { email: "user5@roomsy.vn", listingIndex: 6, rating: 5, criteria: ["dung_mo_ta", "chu_nha_than_thien"], comment: "View sông đẹp như ảnh, chủ nhà nhiệt tình hỗ trợ." },
+  { email: "user6@roomsy.vn", listingIndex: 7, rating: 4, criteria: ["an_ninh_tot"], comment: "Gần biển, mát mẻ, an ninh khu vực tốt." },
+  { email: "user1@roomsy.vn", listingIndex: 9, rating: 4, criteria: ["gia_hop_ly", "chu_nha_than_thien"], comment: "Phòng có gác tiện lợi, giá phải chăng, chủ nhà vui vẻ." },
+  { email: "user7@roomsy.vn", listingIndex: 2, rating: 3, criteria: ["gia_hop_ly"], comment: "Phòng nhỏ nhưng giá rẻ, phù hợp sinh viên." },
+];
+
+async function seedReviews(ids, revieweeId, listingIds) {
+  await admin.from("reviews").delete().eq("reviewee_id", revieweeId);
+
+  const rows = SAMPLE_REVIEWS.map(({ email, listingIndex, ...review }) => ({
+    ...review,
+    reviewer_id: ids[email],
+    reviewee_id: revieweeId,
+    listing_id: listingIds[listingIndex],
+  }));
+
+  const { error } = await admin.from("reviews").insert(rows);
+  if (error) throw error;
+  console.log(`- Đã tạo ${rows.length} đánh giá mẫu.`);
+}
+
 async function main() {
   const ids = {};
 
@@ -480,10 +512,13 @@ async function main() {
   ids[ADMIN_ACCOUNT.email] = await ensureUser(ADMIN_ACCOUNT, ADMIN_PASSWORD);
 
   console.log("Tạo tin đăng mẫu cho user2 (landlord gốc)...");
-  await seedListings(ids["user2@roomsy.vn"]);
+  const listingIds = await seedListings(ids["user2@roomsy.vn"]);
 
   console.log("Tạo tin ở ghép mẫu...");
   await seedRoommatePosts(ids);
+
+  console.log("Tạo đánh giá mẫu cho user2 (landlord gốc)...");
+  await seedReviews(ids, ids["user2@roomsy.vn"], listingIds);
 
   console.log("\nHoàn tất. Tài khoản demo:");
   [...RENAMES, ...NEW_ACCOUNTS].forEach((a) =>

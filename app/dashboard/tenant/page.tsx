@@ -14,6 +14,7 @@ import {
 import { getLocale } from "@/lib/i18n/getLocale";
 import { t } from "@/lib/i18n/translate";
 import { statusLabel } from "@/lib/format";
+import { RatingStars } from "@/components/reviews/RatingStars";
 import type { ListingWithOwner, RoommatePost } from "@/lib/types";
 
 export default async function TenantOverviewPage() {
@@ -37,6 +38,13 @@ export default async function TenantOverviewPage() {
     .from("roommate_posts")
     .select("*")
     .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(3);
+
+  const { data: myReviews } = await supabase
+    .from("reviews")
+    .select("id, rating, comment, listing:listings(title)")
+    .eq("reviewer_id", user.id)
     .order("created_at", { ascending: false })
     .limit(3);
 
@@ -152,14 +160,34 @@ export default async function TenantOverviewPage() {
             )}
           </section>
 
-          {/* Quản lý đánh giá — GĐ4, placeholder */}
+          {/* Quản lý đánh giá — prototype, xem [[project_gd4_scope]] */}
           <section className="rounded-xl bg-background-soft p-4 shadow-sm">
-            <h2 className="mb-1 text-sm font-semibold text-ink">
+            <h2 className="mb-2 text-sm font-semibold text-ink">
               {t(locale, "dashboard.tenant.reviewsTitle")}
             </h2>
-            <p className="text-sm text-muted">
-              {t(locale, "dashboard.tenant.comingSoon")}
-            </p>
+            {myReviews && myReviews.length > 0 ? (
+              <ul className="space-y-2">
+                {(
+                  myReviews as unknown as {
+                    id: string;
+                    rating: number;
+                    comment: string | null;
+                    listing: { title: string } | null;
+                  }[]
+                ).map((review) => (
+                  <li key={review.id} className="flex justify-between gap-2 text-sm">
+                    <span className="truncate text-body">
+                      {review.listing?.title ?? "—"}
+                    </span>
+                    <RatingStars rating={review.rating} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-muted">
+                {t(locale, "dashboard.tenant.myReviewsEmpty")}
+              </p>
+            )}
           </section>
         </div>
 

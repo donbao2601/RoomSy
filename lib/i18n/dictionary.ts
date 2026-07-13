@@ -14,6 +14,7 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "nav.admin": "Quản trị",
     "nav.vip": "VIP",
     "nav.roommate": "Ở ghép",
+    "nav.community": "Cộng đồng",
     "nav.signOut": "Đăng xuất",
 
     // home
@@ -141,6 +142,24 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "review.criteria.dung_hen": "Đúng giờ hẹn",
     "review.criteria.gia_hop_ly": "Giá hợp lý",
     "dashboard.tenant.myReviewsEmpty": "Bạn chưa viết đánh giá nào.",
+
+    // community/blog (GĐ4 Nhóm 3 — prototype, mock data tĩnh)
+    "community.pageTitle": "Cộng đồng",
+    "community.category.guide": "Kiến thức thuê trọ",
+    "community.category.warning": "Cảnh báo lừa đảo",
+    "community.category.roommate": "Review",
+    "community.category.finance": "Tài chính cá nhân",
+    "community.categoryAll": "Tất cả",
+    "community.views": "lượt xem",
+    "community.commentsTitle": "Bình luận",
+    "community.commentsEmpty": "Chưa có bình luận nào.",
+    "community.commentPlaceholder": "Viết bình luận...",
+    "community.commentSubmit": "Gửi",
+    "community.commentYou": "Bạn",
+    "community.commentPrototypeNote":
+      "Bản demo: bình luận chỉ hiển thị tạm trên trình duyệt, chưa lưu vào hệ thống.",
+    "community.backToList": "Quay lại Cộng đồng",
+    "community.empty": "Chưa có bài viết nào trong nhóm này.",
 
     // type labels
     "type.room": "Phòng trọ",
@@ -349,6 +368,7 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "nav.admin": "Admin",
     "nav.vip": "VIP",
     "nav.roommate": "Roommates",
+    "nav.community": "Community",
     "nav.signOut": "Sign out",
 
     "home.title": "Find rooms, apartments & roommates easily",
@@ -472,6 +492,24 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "review.criteria.dung_hen": "On time",
     "review.criteria.gia_hop_ly": "Fair price",
     "dashboard.tenant.myReviewsEmpty": "You haven't written any reviews yet.",
+
+    // community/blog (Phase 4, Group 3 — prototype, static mock data)
+    "community.pageTitle": "Community",
+    "community.category.guide": "Rental guides",
+    "community.category.warning": "Scam warnings",
+    "community.category.roommate": "Reviews",
+    "community.category.finance": "Personal finance",
+    "community.categoryAll": "All",
+    "community.views": "views",
+    "community.commentsTitle": "Comments",
+    "community.commentsEmpty": "No comments yet.",
+    "community.commentPlaceholder": "Write a comment...",
+    "community.commentSubmit": "Post",
+    "community.commentYou": "You",
+    "community.commentPrototypeNote":
+      "Demo build: comments only appear locally in your browser, not saved anywhere.",
+    "community.backToList": "Back to Community",
+    "community.empty": "No posts in this category yet.",
 
     "type.room": "Room",
     "type.apartment": "Apartment",

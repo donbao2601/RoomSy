@@ -23,6 +23,12 @@ export async function Navbar({ locale }: { locale: Locale }) {
             {t(locale, "nav.roommate")}
           </Link>
           <Link
+            href="/community"
+            className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
+          >
+            {t(locale, "nav.community")}
+          </Link>
+          <Link
             href="/vip"
             className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
           >

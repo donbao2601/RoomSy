@@ -17,14 +17,20 @@ Deadline: 17/7/2026 (đồ án tốt nghiệp — cần sản phẩm web thật,
 - Primary: `#3F4A1F`
 - Primary dark: `#2E3717`
 - Background: `#EDF0DF`
+- Background soft (card/nền phụ sáng hơn): `#FBF7EE`
 - Ink (text đậm): `#1A2410`
 - Body (text thường): `#55604A`
 - Muted (text phụ/disabled): `#8D9280`
 - Line (border/divider): `#E5E8D9`
 - Gold accent (badge/highlight): `#F5A524`
 - Orange: `#F97316` (chưa rõ mục đích — KHÔNG dùng cho tính năng mới trừ khi được yêu cầu rõ)
+
+## Màu trạng thái (dùng cho GĐ3 — duyệt tin, vi phạm, badge trạng thái)
+- Error / vi phạm nghiêm trọng, từ chối (đỏ): `#B3261E`
+- Warning / chờ xử lý, cảnh cáo (amber): text `#B45309`, nền `#FFF1E7`
+- Info / đang xử lý, đang xem xét (xanh dương): text `#2563AC`, nền `#E4EEF9`
+
 - Font: `Be Vietnam Pro` (import từ Google Fonts trong layout gốc)
-- Mobile-first breakpoints
 
 ## Supabase
 - Project URL: `https://vgrtkstgpjskuwekvmen.supabase.co`

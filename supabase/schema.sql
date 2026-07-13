@@ -438,3 +438,14 @@ create policy "listing_images_delete_own"
     bucket_id = 'listing-images'
     and (storage.foldername(name))[1] = auth.uid()::text
   );
+
+-- ============================================================================
+-- Giai đoạn 3 — Báo cáo vi phạm (mức độ)
+-- Chạy 1 lần trong Supabase SQL Editor (nối tiếp phần trên).
+-- ============================================================================
+
+-- reports: mức độ vi phạm (nhẹ/trung bình/nghiêm trọng), dùng cho badge màu
+-- error/warning/info ở /admin/reports. Bảng reports đã có từ GĐ0, trước GĐ3
+-- chưa có dữ liệu và chưa được app nào dùng.
+alter table public.reports add column if not exists severity text not null default 'low'
+  check (severity in ('low', 'medium', 'high'));

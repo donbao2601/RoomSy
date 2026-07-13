@@ -141,6 +141,7 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "admin.nav.users": "Người dùng",
     "admin.nav.pendingListings": "Duyệt tin",
     "admin.nav.revenue": "Doanh thu",
+    "admin.nav.reports": "Báo cáo vi phạm",
 
     // admin: /admin (tổng quan)
     "admin.overview.title": "Tổng quan quản trị",
@@ -224,6 +225,27 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "admin.users.lockConfirm":
       "Khóa tài khoản này? Người dùng sẽ không thể đăng nhập.",
     "admin.users.unlockConfirm": "Mở khóa tài khoản này?",
+
+    // admin: /admin/reports
+    "admin.reports.title": "Xử lý báo cáo vi phạm",
+    "admin.reports.empty": "Không có báo cáo nào đang chờ xử lý.",
+    "admin.reports.colTarget": "Đối tượng bị báo cáo",
+    "admin.reports.colReason": "Lý do",
+    "admin.reports.colReporter": "Người báo cáo",
+    "admin.reports.colSeverity": "Mức độ",
+    "admin.reports.colStatus": "Trạng thái",
+    "admin.reports.colAction": "Xử lý",
+    "admin.reports.severityLow": "Nhẹ",
+    "admin.reports.severityMedium": "Trung bình",
+    "admin.reports.severityHigh": "Nghiêm trọng",
+    "admin.reports.statusPending": "Chờ xử lý",
+    "admin.reports.statusResolved": "Đã xử lý",
+    "admin.reports.actionWarnHide": "Cảnh cáo, ẩn tin",
+    "admin.reports.actionLockBoth": "Khóa tin, tạm khóa tài khoản",
+    "admin.reports.actionBanPermanent": "Khóa vĩnh viễn",
+    "admin.reports.actionConfirm": "Xác nhận xử lý báo cáo này?",
+    "admin.reports.targetListing": "Tin đăng",
+    "admin.reports.targetUser": "Tài khoản",
 
     // admin: /admin/listings/pending
     "admin.pending.title": "Duyệt tin đăng",
@@ -375,6 +397,7 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "admin.nav.users": "Users",
     "admin.nav.pendingListings": "Pending listings",
     "admin.nav.revenue": "Revenue",
+    "admin.nav.reports": "Reports",
 
     "admin.overview.title": "Admin overview",
     "admin.overview.totalUsers": "Total users",
@@ -452,6 +475,26 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "admin.users.lockConfirm":
       "Lock this account? The user will not be able to log in.",
     "admin.users.unlockConfirm": "Unlock this account?",
+
+    "admin.reports.title": "Handle violation reports",
+    "admin.reports.empty": "No reports pending.",
+    "admin.reports.colTarget": "Reported target",
+    "admin.reports.colReason": "Reason",
+    "admin.reports.colReporter": "Reporter",
+    "admin.reports.colSeverity": "Severity",
+    "admin.reports.colStatus": "Status",
+    "admin.reports.colAction": "Action",
+    "admin.reports.severityLow": "Low",
+    "admin.reports.severityMedium": "Medium",
+    "admin.reports.severityHigh": "High",
+    "admin.reports.statusPending": "Pending",
+    "admin.reports.statusResolved": "Resolved",
+    "admin.reports.actionWarnHide": "Warn, hide listing",
+    "admin.reports.actionLockBoth": "Lock listing & suspend account",
+    "admin.reports.actionBanPermanent": "Ban permanently",
+    "admin.reports.actionConfirm": "Confirm handling this report?",
+    "admin.reports.targetListing": "Listing",
+    "admin.reports.targetUser": "Account",
 
     "admin.pending.title": "Listing review",
     "admin.pending.empty": "No listings pending review.",

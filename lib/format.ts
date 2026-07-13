@@ -11,6 +11,10 @@ export function formatArea(area: number | null) {
   return `${new Intl.NumberFormat("vi-VN").format(area)} m²`;
 }
 
+export function formatCurrency(amount: number) {
+  return `${new Intl.NumberFormat("vi-VN").format(amount)}đ`;
+}
+
 export const TYPE_LABELS: Record<string, string> = {
   room: "Phòng trọ",
   apartment: "Căn hộ",

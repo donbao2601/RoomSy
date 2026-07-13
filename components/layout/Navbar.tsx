@@ -43,6 +43,12 @@ export async function Navbar({ locale }: { locale: Locale }) {
           {user?.role === "landlord" && (
             <>
               <Link
+                href="/dashboard/landlord"
+                className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
+              >
+                {t(locale, "nav.landlordOverview")}
+              </Link>
+              <Link
                 href="/dashboard/landlord/listings/new"
                 className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
               >
@@ -61,7 +67,7 @@ export async function Navbar({ locale }: { locale: Locale }) {
           {user?.role === "admin" && (
             <>
               <Link
-                href="/dashboard/admin"
+                href="/admin"
                 className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
               >
                 {t(locale, "nav.admin")}

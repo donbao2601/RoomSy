@@ -137,8 +137,45 @@ export const dictionary: Record<Locale, Record<string, string>> = {
       "Duyệt tin, quản lý người dùng & báo cáo sẽ được xây dựng ở Giai đoạn 3.",
 
     // admin nav
+    "admin.nav.overview": "Tổng quan",
     "admin.nav.users": "Người dùng",
     "admin.nav.pendingListings": "Duyệt tin",
+    "admin.nav.revenue": "Doanh thu",
+
+    // admin: /admin (tổng quan)
+    "admin.overview.title": "Tổng quan quản trị",
+    "admin.overview.totalUsers": "Tổng người dùng",
+    "admin.overview.totalListings": "Tổng tin đăng",
+    "admin.overview.monthlyRevenue": "Doanh thu tháng này",
+    "admin.overview.pendingReports": "Báo cáo chờ xử lý",
+
+    // admin: /admin/revenue
+    "admin.revenue.title": "Quản lý doanh thu",
+    "admin.revenue.note":
+      "Dữ liệu mẫu minh hoạ — Giai đoạn 2 không lưu lịch sử giao dịch thật.",
+    "admin.revenue.chartTitle": "Doanh thu theo tháng",
+    "admin.revenue.legendVip": "VIP",
+    "admin.revenue.legendPromotion": "Quảng bá tin",
+    "admin.revenue.legendBoost": "Đẩy tin",
+    "admin.revenue.colMonth": "Tháng",
+    "admin.revenue.colVip": "VIP",
+    "admin.revenue.colPromotion": "Quảng bá",
+    "admin.revenue.colBoost": "Đẩy tin",
+    "admin.revenue.colTotal": "Tổng",
+
+    // dashboard landlord (B2)
+    "nav.landlordOverview": "Tổng quan",
+    "dashboard.landlord.title": "Tổng quan",
+    "dashboard.landlord.activeListings": "Tin đang hoạt động",
+    "dashboard.landlord.totalViews": "Lượt xem",
+    "dashboard.landlord.totalContacts": "Lượt liên hệ",
+    "dashboard.landlord.totalFavorites": "Lượt yêu thích",
+    "dashboard.landlord.currentVip": "Gói VIP hiện tại",
+    "dashboard.landlord.boostRemaining": "Lượt đẩy tin còn lại",
+    "dashboard.landlord.notifications": "Thông báo",
+    "dashboard.landlord.noNotifications": "Không có thông báo mới.",
+    "dashboard.landlord.notifRejected": "Tin bị từ chối",
+    "dashboard.landlord.notifExpired": "Tin đã hết hạn",
 
     // admin: user roles
     "role.tenant": "Khách thuê",
@@ -313,8 +350,42 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "admin.subtitle":
       "Listing moderation, user management & reports are built in Phase 3.",
 
+    "admin.nav.overview": "Overview",
     "admin.nav.users": "Users",
     "admin.nav.pendingListings": "Pending listings",
+    "admin.nav.revenue": "Revenue",
+
+    "admin.overview.title": "Admin overview",
+    "admin.overview.totalUsers": "Total users",
+    "admin.overview.totalListings": "Total listings",
+    "admin.overview.monthlyRevenue": "Revenue this month",
+    "admin.overview.pendingReports": "Pending reports",
+
+    "admin.revenue.title": "Revenue management",
+    "admin.revenue.note":
+      "Sample data for demo — Phase 2 does not store real transaction history.",
+    "admin.revenue.chartTitle": "Monthly revenue",
+    "admin.revenue.legendVip": "VIP",
+    "admin.revenue.legendPromotion": "Promotion",
+    "admin.revenue.legendBoost": "Boost",
+    "admin.revenue.colMonth": "Month",
+    "admin.revenue.colVip": "VIP",
+    "admin.revenue.colPromotion": "Promotion",
+    "admin.revenue.colBoost": "Boost",
+    "admin.revenue.colTotal": "Total",
+
+    "nav.landlordOverview": "Overview",
+    "dashboard.landlord.title": "Overview",
+    "dashboard.landlord.activeListings": "Active listings",
+    "dashboard.landlord.totalViews": "Views",
+    "dashboard.landlord.totalContacts": "Contacts",
+    "dashboard.landlord.totalFavorites": "Favorites",
+    "dashboard.landlord.currentVip": "Current VIP plan",
+    "dashboard.landlord.boostRemaining": "Boosts remaining",
+    "dashboard.landlord.notifications": "Notifications",
+    "dashboard.landlord.noNotifications": "No new notifications.",
+    "dashboard.landlord.notifRejected": "Listing rejected",
+    "dashboard.landlord.notifExpired": "Listing expired",
 
     "role.tenant": "Tenant",
     "role.landlord": "Landlord",

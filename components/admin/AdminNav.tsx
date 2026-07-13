@@ -6,6 +6,12 @@ export function AdminNav({ locale }: { locale: Locale }) {
   return (
     <nav className="mb-6 flex flex-wrap gap-2">
       <Link
+        href="/admin"
+        className="rounded-lg bg-background-soft px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
+      >
+        {t(locale, "admin.nav.overview")}
+      </Link>
+      <Link
         href="/admin/users"
         className="rounded-lg bg-background-soft px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
       >
@@ -16,6 +22,12 @@ export function AdminNav({ locale }: { locale: Locale }) {
         className="rounded-lg bg-background-soft px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
       >
         {t(locale, "admin.nav.pendingListings")}
+      </Link>
+      <Link
+        href="/admin/revenue"
+        className="rounded-lg bg-background-soft px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
+      >
+        {t(locale, "admin.nav.revenue")}
       </Link>
     </nav>
   );

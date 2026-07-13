@@ -82,3 +82,16 @@ export const PROMOTION_TIERS = [
 export const PROMOTION_DURATION_DAYS = 7;
 export const BOOST_PRICE = 20000;
 export const BOOST_COOLDOWN_MINUTES = 60;
+
+/** 9 tiêu chí duyệt tin (GĐ3) — admin tự tick tay, không auto-validate. */
+export const LISTING_REVIEW_CRITERIA = [
+  "admin.pending.criteria.address",
+  "admin.pending.criteria.images",
+  "admin.pending.criteria.price",
+  "admin.pending.criteria.description",
+  "admin.pending.criteria.otp",
+  "admin.pending.criteria.noCopiedImages",
+  "admin.pending.criteria.noOffensive",
+  "admin.pending.criteria.noIllegal",
+  "admin.pending.criteria.noSpam",
+] as const;

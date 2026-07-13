@@ -29,6 +29,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  if (pathname.startsWith("/admin")) {
+    if (profile.role !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+    return getResponse();
+  }
+
   const roleSegment = pathname.split("/")[2]; // /dashboard/<role>/...
   if (
     profile.role !== "admin" &&
@@ -42,5 +49,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard/:path*", "/admin/:path*"],
 };

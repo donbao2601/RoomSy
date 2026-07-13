@@ -109,7 +109,7 @@ export default async function SearchPage({
   return (
     <main className="min-h-screen bg-background px-4 py-8">
       <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[280px_1fr]">
-        <aside className="h-fit rounded-xl bg-white p-4 shadow-sm">
+        <aside className="h-fit rounded-xl bg-background-soft p-4 shadow-sm">
           <form method="get" className="space-y-4">
             <div>
               <label className="mb-1 block text-sm font-medium text-body">
@@ -281,7 +281,7 @@ export default async function SearchPage({
                     className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
                       p === page
                         ? "bg-primary text-white"
-                        : "bg-white text-body hover:bg-background"
+                        : "bg-background-soft text-body hover:bg-background"
                     }`}
                   >
                     {p}

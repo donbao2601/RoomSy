@@ -92,7 +92,7 @@ export default async function ListingDetailPage({
           )}
         </div>
 
-        <div className="mt-6 rounded-xl bg-white p-5 shadow-sm sm:p-6">
+        <div className="mt-6 rounded-xl bg-background-soft p-5 shadow-sm sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex flex-wrap items-center gap-2">

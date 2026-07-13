@@ -22,7 +22,7 @@ export function ListingCard({
   return (
     <Link
       href={`/listings/${listing.id}`}
-      className="group block overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md"
+      className="group block overflow-hidden rounded-xl bg-background-soft shadow-sm transition hover:shadow-md"
     >
       <div className="relative aspect-[4/3] w-full bg-neutral-100">
         {cover ? (

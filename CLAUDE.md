@@ -25,10 +25,23 @@ Deadline: 17/7/2026 (đồ án tốt nghiệp — cần sản phẩm web thật,
 - Gold accent (badge/highlight): `#F5A524`
 - Orange: `#F97316` (chưa rõ mục đích — KHÔNG dùng cho tính năng mới trừ khi được yêu cầu rõ)
 
+### Token bổ sung (đối chiếu từ file standalone GĐ1 — 2026-07-13)
+- Border outline (viền nút outline, đi kèm Background + Primary dark): `#D9DCC2`
+- Gold dark (chữ/icon tương phản trên nền Gold accent): `#3A2600`
+- Stepper inactive (bước chưa active trong progress stepper): `#8A968F`
+- Stepper active (bước active trong progress stepper): `#13231B`
+  (Lưu ý: gần giống Muted `#8D9280` / Ink `#1A2410` nhưng lệch hex nhẹ — giữ token riêng, KHÔNG gộp vào Muted/Ink để tránh sai lệch màu khi áp dụng)
+- Skeleton from (gradient nền chờ ảnh, điểm đầu): `#DCEAE2`
+- Skeleton to (gradient nền chờ ảnh, điểm cuối): `#C2DBCD`
+  (Lưu ý: tông xanh mint, lệch tông so với palette olive/vàng hiện tại — không phải lỗi thiết kế, giữ nguyên để không nhầm khi áp dụng)
+- On dark (chữ/icon trên nền tối, vd header/nút Primary): `#FFFFFF`
+
 ## Màu trạng thái (dùng cho GĐ3 — duyệt tin, vi phạm, badge trạng thái)
 - Error / vi phạm nghiêm trọng, từ chối (đỏ): `#B3261E`
 - Warning / chờ xử lý, cảnh cáo (amber): text `#B45309`, nền `#FFF1E7`
 - Info / đang xử lý, đang xem xét (xanh dương): text `#2563AC`, nền `#E4EEF9`
+- Expired / tin hết hạn (badge trạng thái tin đăng): text `#9B2C2C`, nền `#F4E2E2`
+  (Lưu ý: schema DB thật hiện KHÔNG có status `expired` riêng cho listings — chỉ pending/active/hidden/rejected. Token này lấy từ mockup GĐ1, chưa gắn với cột DB nào — nếu cần dùng thật, phải tính toán từ `expires_at` trong application logic, không tự thêm status mới vào constraint)
 
 - Font: `Be Vietnam Pro` (import từ Google Fonts trong layout gốc)
 

@@ -76,7 +76,17 @@ export async function Navbar({ locale }: { locale: Locale }) {
             </>
           )}
 
-          {user?.role === "tenant" && <SignOutButton />}
+          {user?.role === "tenant" && (
+            <>
+              <Link
+                href="/dashboard/tenant"
+                className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
+              >
+                {t(locale, "nav.tenantDashboard")}
+              </Link>
+              <SignOutButton />
+            </>
+          )}
 
           <LanguageToggle />
         </nav>

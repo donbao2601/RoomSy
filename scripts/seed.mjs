@@ -338,6 +338,131 @@ async function seedListings(landlordId) {
   );
 }
 
+// 8 tin ở ghép mẫu (GĐ4 — Nhóm 1, backend thật): find_room do tenant đăng
+// (đang tìm chỗ ở ghép), find_person do landlord đăng (đang có phòng, tìm
+// người ở ghép cùng) — mix quận TP.HCM/Hà Nội/Đà Nẵng.
+const SAMPLE_ROOMMATE_POSTS = [
+  {
+    email: "user1@roomsy.vn",
+    type: "find_room",
+    budget: 3000000,
+    district: "Quận 1, TP.HCM",
+    gender: "nu",
+    age: 22,
+    occupation: "Sinh viên",
+    lifestyle_tags: ["gio_giac_tu_do", "sinh_vien_hoc_sinh"],
+    has_pet: false,
+    smoking: false,
+    description: "Mình là sinh viên năm 3, đang tìm phòng ở ghép gần trung tâm Quận 1, ưu tiên khu an ninh, giờ giấc tự do.",
+  },
+  {
+    email: "user7@roomsy.vn",
+    type: "find_room",
+    budget: 2500000,
+    district: "Cầu Giấy, Hà Nội",
+    gender: "nam",
+    age: 24,
+    occupation: "Nhân viên văn phòng",
+    lifestyle_tags: ["di_lam_van_phong", "sach_se_ngan_nap"],
+    has_pet: false,
+    smoking: false,
+    description: "Đi làm giờ hành chính, tìm chỗ ở ghép sạch sẽ, yên tĩnh khu Cầu Giấy để tiện đi làm.",
+  },
+  {
+    email: "user1@roomsy.vn",
+    type: "find_room",
+    budget: 2200000,
+    district: "Sơn Trà, Đà Nẵng",
+    gender: "nu",
+    age: 21,
+    occupation: "Sinh viên",
+    lifestyle_tags: ["sinh_vien_hoc_sinh"],
+    has_pet: false,
+    smoking: false,
+    description: "Chuyển vào Đà Nẵng học, cần tìm phòng ở ghép gần biển Mỹ Khê, ngân sách vừa phải.",
+  },
+  {
+    email: "user7@roomsy.vn",
+    type: "find_room",
+    budget: 2800000,
+    district: "Tân Bình, TP.HCM",
+    gender: "khong_yeu_cau",
+    age: 25,
+    occupation: "Freelancer",
+    lifestyle_tags: ["gio_giac_tu_do", "hoa_dong"],
+    has_pet: true,
+    smoking: false,
+    description: "Làm freelance nên giờ giấc linh hoạt, có nuôi 1 bé mèo, tìm chỗ ở ghép thân thiện với thú cưng.",
+  },
+  {
+    email: "user2@roomsy.vn",
+    type: "find_person",
+    budget: 3500000,
+    district: "Bình Thạnh, TP.HCM",
+    gender: "khong_yeu_cau",
+    age: null,
+    occupation: null,
+    lifestyle_tags: ["hoa_dong"],
+    has_pet: true,
+    smoking: false,
+    description: "Đang có phòng trống trong căn hộ mini ở Bình Thạnh, tìm người ở ghép hoà đồng, thân thiện với thú cưng.",
+  },
+  {
+    email: "user3@roomsy.vn",
+    type: "find_person",
+    budget: 2400000,
+    district: "Đống Đa, Hà Nội",
+    gender: "nu",
+    age: null,
+    occupation: null,
+    lifestyle_tags: ["sach_se_ngan_nap", "yen_tinh_it_giao_tiep"],
+    has_pet: false,
+    smoking: false,
+    description: "Nhà nguyên căn ở Đống Đa còn phòng trống, ưu tiên bạn nữ đi làm hoặc sinh viên, không hút thuốc.",
+  },
+  {
+    email: "user4@roomsy.vn",
+    type: "find_person",
+    budget: 3200000,
+    district: "Hải Châu, Đà Nẵng",
+    gender: "nam",
+    age: null,
+    occupation: null,
+    lifestyle_tags: ["di_lam_van_phong"],
+    has_pet: false,
+    smoking: true,
+    description: "Căn hộ view sông Hàn còn 1 phòng, tìm bạn nam đi làm, có thể hút thuốc ngoài ban công.",
+  },
+  {
+    email: "user5@roomsy.vn",
+    type: "find_person",
+    budget: 2000000,
+    district: "Gò Vấp, TP.HCM",
+    gender: "khong_yeu_cau",
+    age: null,
+    occupation: null,
+    lifestyle_tags: ["gio_giac_tu_do"],
+    has_pet: false,
+    smoking: false,
+    description: "Phòng trọ giá rẻ khu Gò Vấp gần trường đại học, phù hợp sinh viên ở ghép, giờ giấc tự do.",
+  },
+];
+
+async function seedRoommatePosts(ids) {
+  const authorIds = [...new Set(SAMPLE_ROOMMATE_POSTS.map((p) => ids[p.email]))];
+  await admin.from("roommate_posts").delete().in("user_id", authorIds);
+
+  const rows = SAMPLE_ROOMMATE_POSTS.map(({ email, ...post }) => ({
+    ...post,
+    user_id: ids[email],
+    status: "active",
+  }));
+
+  const { error } = await admin.from("roommate_posts").insert(rows);
+  if (error) throw error;
+  console.log(`- Đã tạo ${rows.length} tin ở ghép mẫu.`);
+}
+
 async function main() {
   const ids = {};
 
@@ -356,6 +481,9 @@ async function main() {
 
   console.log("Tạo tin đăng mẫu cho user2 (landlord gốc)...");
   await seedListings(ids["user2@roomsy.vn"]);
+
+  console.log("Tạo tin ở ghép mẫu...");
+  await seedRoommatePosts(ids);
 
   console.log("\nHoàn tất. Tài khoản demo:");
   [...RENAMES, ...NEW_ACCOUNTS].forEach((a) =>

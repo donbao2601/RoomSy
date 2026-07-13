@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/supabase/getCurrentUser";
@@ -12,7 +13,8 @@ import {
 } from "@/lib/mock/tenant";
 import { getLocale } from "@/lib/i18n/getLocale";
 import { t } from "@/lib/i18n/translate";
-import type { ListingWithOwner } from "@/lib/types";
+import { statusLabel } from "@/lib/format";
+import type { ListingWithOwner, RoommatePost } from "@/lib/types";
 
 export default async function TenantOverviewPage() {
   const user = await getCurrentUser();
@@ -30,6 +32,13 @@ export default async function TenantOverviewPage() {
   const favoriteListings = (favoriteRows ?? [])
     .map((f) => f.listing)
     .filter(Boolean) as unknown as ListingWithOwner[];
+
+  const { data: roommatePosts } = await supabase
+    .from("roommate_posts")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(3);
 
   return (
     <main className="min-h-screen bg-background px-4 py-8">
@@ -104,14 +113,43 @@ export default async function TenantOverviewPage() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2">
-          {/* Quản lý tin ở ghép — GĐ4, placeholder */}
+          {/* Quản lý tin ở ghép */}
           <section className="rounded-xl bg-background-soft p-4 shadow-sm">
-            <h2 className="mb-1 text-sm font-semibold text-ink">
-              {t(locale, "dashboard.tenant.roommateTitle")}
-            </h2>
-            <p className="text-sm text-muted">
-              {t(locale, "dashboard.tenant.comingSoon")}
-            </p>
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-ink">
+                {t(locale, "dashboard.tenant.roommateTitle")}
+              </h2>
+              <Link
+                href="/roommate/manage"
+                className="text-xs font-medium text-primary hover:underline"
+              >
+                {t(locale, "roommate.managePosts")}
+              </Link>
+            </div>
+            {roommatePosts && roommatePosts.length > 0 ? (
+              <ul className="space-y-2">
+                {(roommatePosts as RoommatePost[]).map((post) => (
+                  <li key={post.id} className="flex justify-between text-sm">
+                    <span className="truncate text-body">
+                      {post.district || "—"} ·{" "}
+                      {t(
+                        locale,
+                        post.type === "find_room"
+                          ? "roommate.tabFindRoom"
+                          : "roommate.tabFindPerson"
+                      )}
+                    </span>
+                    <span className="text-xs text-muted">
+                      {statusLabel(locale, post.status)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-muted">
+                {t(locale, "roommate.manageEmpty")}
+              </p>
+            )}
           </section>
 
           {/* Quản lý đánh giá — GĐ4, placeholder */}

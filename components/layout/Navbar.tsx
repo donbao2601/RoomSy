@@ -17,6 +17,12 @@ export async function Navbar({ locale }: { locale: Locale }) {
 
         <nav className="flex items-center gap-1 sm:gap-2">
           <Link
+            href="/roommate"
+            className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
+          >
+            {t(locale, "nav.roommate")}
+          </Link>
+          <Link
             href="/vip"
             className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
           >

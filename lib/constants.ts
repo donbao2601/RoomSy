@@ -83,6 +83,21 @@ export const PROMOTION_DURATION_DAYS = 7;
 export const BOOST_PRICE = 20000;
 export const BOOST_COOLDOWN_MINUTES = 60;
 
+export const GENDER_OPTIONS = [
+  { value: "nam", label: "Nam" },
+  { value: "nu", label: "Nữ" },
+  { value: "khong_yeu_cau", label: "Không yêu cầu" },
+] as const;
+
+export const ROOMMATE_LIFESTYLE_TAGS = [
+  { value: "gio_giac_tu_do", label: "Giờ giấc tự do" },
+  { value: "sach_se_ngan_nap", label: "Sạch sẽ, ngăn nắp" },
+  { value: "hoa_dong", label: "Hoà đồng, thân thiện" },
+  { value: "yen_tinh_it_giao_tiep", label: "Yên tĩnh, ít giao tiếp" },
+  { value: "di_lam_van_phong", label: "Đi làm văn phòng" },
+  { value: "sinh_vien_hoc_sinh", label: "Sinh viên/học sinh" },
+] as const;
+
 /** 9 tiêu chí duyệt tin (GĐ3) — admin tự tick tay, không auto-validate. */
 export const LISTING_REVIEW_CRITERIA = [
   "admin.pending.criteria.address",

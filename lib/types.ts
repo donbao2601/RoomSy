@@ -26,3 +26,29 @@ export type Listing = {
 export type ListingWithOwner = Listing & {
   owner: { vip_tier: string; vip_expires_at: string | null } | null;
 };
+
+export type RoommatePost = {
+  id: string;
+  user_id: string;
+  type: "find_room" | "find_person";
+  budget: number | null;
+  district: string | null;
+  gender: string | null;
+  age: number | null;
+  occupation: string | null;
+  lifestyle_tags: string[];
+  has_pet: boolean;
+  smoking: boolean;
+  description: string | null;
+  status: string;
+  created_at: string;
+};
+
+/** RoommatePost kèm thông tin người đăng — dùng ở trang danh sách/chi tiết. */
+export type RoommatePostWithAuthor = RoommatePost & {
+  author: {
+    full_name: string | null;
+    phone: string | null;
+    avatar_url: string | null;
+  } | null;
+};

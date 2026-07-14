@@ -45,11 +45,11 @@ export function ListingRowActions({
   }
 
   return (
-    <div className="flex flex-col items-end gap-1.5 text-sm">
-      <div className="flex items-center gap-3">
+    <div className="flex flex-col items-stretch gap-2 text-sm sm:items-end">
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
         <Link
           href={`/dashboard/landlord/listings/${id}/edit`}
-          className="font-medium text-primary"
+          className="rounded-md py-1.5 font-medium text-primary"
         >
           {t("manage.edit")}
         </Link>
@@ -57,7 +57,7 @@ export function ListingRowActions({
           <button
             onClick={handleToggleHidden}
             disabled={isPending}
-            className="font-medium text-body hover:text-ink disabled:opacity-50"
+            className="rounded-md py-1.5 font-medium text-body hover:text-ink disabled:opacity-50"
           >
             {status === "hidden" ? t("manage.show") : t("manage.hide")}
           </button>
@@ -65,14 +65,14 @@ export function ListingRowActions({
         <button
           onClick={handleDelete}
           disabled={isPending}
-          className="font-medium text-red-600 hover:text-red-700 disabled:opacity-50"
+          className="rounded-md py-1.5 font-medium text-red-600 hover:text-red-700 disabled:opacity-50"
         >
           {t("manage.delete")}
         </button>
       </div>
 
       {status === "active" && notExpired && (
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-line pt-2 sm:border-t-0 sm:pt-0">
           <Link
             href={`/dashboard/landlord/listings/${id}/promote`}
             className="text-xs font-medium text-gold"

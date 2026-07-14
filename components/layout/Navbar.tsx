@@ -1,107 +1,54 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/supabase/getCurrentUser";
-import { SignOutButton } from "@/components/layout/SignOutButton";
-import { LanguageToggle } from "@/components/layout/LanguageToggle";
+import { MobileNav, type NavItem } from "@/components/layout/MobileNav";
 import { t } from "@/lib/i18n/translate";
 import type { Locale } from "@/lib/i18n/locale";
 
 export async function Navbar({ locale }: { locale: Locale }) {
   const user = await getCurrentUser();
 
+  const items: NavItem[] = [
+    { href: "/roommate", label: t(locale, "nav.roommate") },
+    { href: "/community", label: t(locale, "nav.community") },
+    { href: "/vip", label: t(locale, "nav.vip") },
+  ];
+
+  if (!user) {
+    items.push(
+      { href: "/auth/login", label: t(locale, "nav.login") },
+      { href: "/auth/register", label: t(locale, "nav.register"), variant: "primary" }
+    );
+  }
+
+  if (user?.role === "landlord") {
+    items.push(
+      { href: "/dashboard/landlord", label: t(locale, "nav.landlordOverview") },
+      { href: "/dashboard/landlord/listings/new", label: t(locale, "nav.postListing") },
+      { href: "/dashboard/landlord/listings", label: t(locale, "nav.manageListings") }
+    );
+  }
+
+  if (user?.role === "admin") {
+    items.push({ href: "/admin", label: t(locale, "nav.admin") });
+  }
+
+  if (user?.role === "tenant") {
+    items.push({ href: "/dashboard/tenant", label: t(locale, "nav.tenantDashboard") });
+  }
+
   return (
     <header className="border-b border-line bg-white">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Link href="/" className="text-lg font-bold text-primary">
           ROOMSY
         </Link>
 
-        <nav className="flex items-center gap-1 sm:gap-2">
-          <Link
-            href="/roommate"
-            className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
-          >
-            {t(locale, "nav.roommate")}
-          </Link>
-          <Link
-            href="/community"
-            className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
-          >
-            {t(locale, "nav.community")}
-          </Link>
-          <Link
-            href="/vip"
-            className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
-          >
-            {t(locale, "nav.vip")}
-          </Link>
-
-          {!user && (
-            <>
-              <Link
-                href="/auth/login"
-                className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
-              >
-                {t(locale, "nav.login")}
-              </Link>
-              <Link
-                href="/auth/register"
-                className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white hover:opacity-90"
-              >
-                {t(locale, "nav.register")}
-              </Link>
-            </>
-          )}
-
-          {user?.role === "landlord" && (
-            <>
-              <Link
-                href="/dashboard/landlord"
-                className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
-              >
-                {t(locale, "nav.landlordOverview")}
-              </Link>
-              <Link
-                href="/dashboard/landlord/listings/new"
-                className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
-              >
-                {t(locale, "nav.postListing")}
-              </Link>
-              <Link
-                href="/dashboard/landlord/listings"
-                className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
-              >
-                {t(locale, "nav.manageListings")}
-              </Link>
-              <SignOutButton />
-            </>
-          )}
-
-          {user?.role === "admin" && (
-            <>
-              <Link
-                href="/admin"
-                className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
-              >
-                {t(locale, "nav.admin")}
-              </Link>
-              <SignOutButton />
-            </>
-          )}
-
-          {user?.role === "tenant" && (
-            <>
-              <Link
-                href="/dashboard/tenant"
-                className="rounded-lg px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
-              >
-                {t(locale, "nav.tenantDashboard")}
-              </Link>
-              <SignOutButton />
-            </>
-          )}
-
-          <LanguageToggle />
-        </nav>
+        <MobileNav
+          items={items}
+          showSignOut={!!user}
+          menuOpenLabel={t(locale, "nav.menuOpen")}
+          menuCloseLabel={t(locale, "nav.menuClose")}
+        />
       </div>
     </header>
   );

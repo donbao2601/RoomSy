@@ -83,42 +83,44 @@ export default async function LandlordListingsPage({
               return (
                 <div
                   key={listing.id}
-                  className="flex items-center gap-4 rounded-xl bg-white p-3 shadow-sm"
+                  className="flex flex-col gap-3 rounded-xl bg-white p-3 shadow-sm sm:flex-row sm:items-center sm:gap-4"
                 >
-                  <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
-                    {listing.images?.[0] && (
-                      <Image
-                        src={listing.images[0]}
-                        alt={listing.title}
-                        fill
-                        className="object-cover"
-                        sizes="80px"
-                      />
-                    )}
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-ink">
-                      {listing.title}
-                    </p>
-                    <p className="text-sm text-primary">
-                      {formatPrice(listing.price)}
-                    </p>
-                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                      <span
-                        className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
-                          STATUS_COLORS[listing.status]
-                        }`}
-                      >
-                        {statusLabel(locale, listing.status)}
-                      </span>
-                      <PromotionBadge tier={tier} locale={locale} />
+                  <div className="flex items-center gap-4">
+                    <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
+                      {listing.images?.[0] && (
+                        <Image
+                          src={listing.images[0]}
+                          alt={listing.title}
+                          fill
+                          className="object-cover"
+                          sizes="80px"
+                        />
+                      )}
                     </div>
-                    {listing.status === "rejected" && listing.reject_reason && (
-                      <p className="mt-1 text-xs text-red-600">
-                        {t(locale, "manage.rejectReason")}: {listing.reject_reason}
+
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold text-ink">
+                        {listing.title}
                       </p>
-                    )}
+                      <p className="text-sm text-primary">
+                        {formatPrice(listing.price)}
+                      </p>
+                      <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                        <span
+                          className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+                            STATUS_COLORS[listing.status]
+                          }`}
+                        >
+                          {statusLabel(locale, listing.status)}
+                        </span>
+                        <PromotionBadge tier={tier} locale={locale} />
+                      </div>
+                      {listing.status === "rejected" && listing.reject_reason && (
+                        <p className="mt-1 text-xs text-red-600">
+                          {t(locale, "manage.rejectReason")}: {listing.reject_reason}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   <ListingRowActions

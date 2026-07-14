@@ -16,6 +16,8 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "nav.roommate": "Ở ghép",
     "nav.community": "Cộng đồng",
     "nav.signOut": "Đăng xuất",
+    "nav.menuOpen": "Mở menu",
+    "nav.menuClose": "Đóng menu",
 
     // home
     "home.title": "Tìm phòng trọ, căn hộ & bạn ở ghép dễ dàng",
@@ -400,6 +402,8 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "nav.roommate": "Roommates",
     "nav.community": "Community",
     "nav.signOut": "Sign out",
+    "nav.menuOpen": "Open menu",
+    "nav.menuClose": "Close menu",
 
     "home.title": "Find rooms, apartments & roommates easily",
     "home.subtitle": "ROOMSY — rental marketplace in Ho Chi Minh City, Hanoi, Da Nang.",

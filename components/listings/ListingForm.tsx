@@ -19,6 +19,22 @@ type Props = {
 
 const STEP_TITLES = ["Thông tin cơ bản", "Vị trí & tiện ích", "Hình ảnh"];
 
+function sanitizeFileName(name: string) {
+  const withoutDiacritics = Array.from(name.normalize("NFD"))
+    .filter((ch) => {
+      const code = ch.codePointAt(0) ?? 0;
+      return code < 0x0300 || code > 0x036f;
+    })
+    .join("");
+
+  return withoutDiacritics
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9._-]/g, "");
+}
+
 export function ListingForm({ mode, userId, initialListing }: Props) {
   const router = useRouter();
   const [step, setStep] = useState(1);
@@ -85,7 +101,7 @@ export function ListingForm({ mode, userId, initialListing }: Props) {
     try {
       const uploadedUrls: string[] = [];
       for (const file of newFiles) {
-        const path = `${userId}/${crypto.randomUUID()}-${file.name}`;
+        const path = `${userId}/${crypto.randomUUID()}-${sanitizeFileName(file.name)}`;
         const { error: uploadError } = await supabase.storage
           .from("listing-images")
           .upload(path, file);

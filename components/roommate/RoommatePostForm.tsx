@@ -46,6 +46,16 @@ export function RoommatePostForm({ mode, userId, initialPost }: Props) {
       return;
     }
 
+    if (budget && (!Number.isFinite(Number(budget)) || Number(budget) < 0)) {
+      setError(t("roommate.formErrorBudget"));
+      return;
+    }
+
+    if (age && (!Number.isFinite(Number(age)) || Number(age) < 18 || Number(age) > 99)) {
+      setError(t("roommate.formErrorAge"));
+      return;
+    }
+
     setLoading(true);
     setError(null);
     const supabase = createClient();
@@ -114,6 +124,7 @@ export function RoommatePostForm({ mode, userId, initialPost }: Props) {
             </span>
             <input
               type="number"
+              min={0}
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
               className="input"
@@ -155,6 +166,8 @@ export function RoommatePostForm({ mode, userId, initialPost }: Props) {
             </span>
             <input
               type="number"
+              min={18}
+              max={99}
               value={age}
               onChange={(e) => setAge(e.target.value)}
               className="input"

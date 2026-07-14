@@ -38,6 +38,7 @@ export default async function AdminOverviewPage() {
     {
       label: t(locale, "admin.overview.monthlyRevenue"),
       value: formatCurrency(monthlyRevenue.total),
+      note: t(locale, "admin.overview.monthlyRevenueNote"),
     },
     {
       label: t(locale, "admin.overview.pendingReports"),
@@ -62,6 +63,9 @@ export default async function AdminOverviewPage() {
             >
               <p className="text-xs text-muted">{tile.label}</p>
               <p className="mt-1 text-xl font-bold text-primary">{tile.value}</p>
+              {tile.note && (
+                <p className="mt-0.5 text-[11px] text-muted">{tile.note}</p>
+              )}
             </div>
           ))}
         </div>

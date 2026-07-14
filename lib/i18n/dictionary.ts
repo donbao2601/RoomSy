@@ -114,6 +114,8 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "roommate.formSubmitEdit": "Lưu thay đổi",
     "roommate.formSaving": "Đang lưu...",
     "roommate.formErrorDescription": "Vui lòng nhập mô tả.",
+    "roommate.formErrorBudget": "Ngân sách phải là số lớn hơn hoặc bằng 0.",
+    "roommate.formErrorAge": "Tuổi phải trong khoảng 18–99.",
     "roommate.manageTitle": "Quản lý tin ở ghép",
     "roommate.manageBackToList": "Xem danh sách",
     "roommate.manageEmpty": "Bạn chưa có tin ở ghép nào.",
@@ -239,6 +241,7 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "admin.overview.totalUsers": "Tổng người dùng",
     "admin.overview.totalListings": "Tổng tin đăng",
     "admin.overview.monthlyRevenue": "Doanh thu tháng này",
+    "admin.overview.monthlyRevenueNote": "Dữ liệu mẫu",
     "admin.overview.pendingReports": "Báo cáo chờ xử lý",
 
     // admin: /admin/revenue
@@ -496,6 +499,8 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "roommate.formSubmitEdit": "Save changes",
     "roommate.formSaving": "Saving...",
     "roommate.formErrorDescription": "Please enter a description.",
+    "roommate.formErrorBudget": "Budget must be a number greater than or equal to 0.",
+    "roommate.formErrorAge": "Age must be between 18 and 99.",
     "roommate.manageTitle": "My roommate posts",
     "roommate.manageBackToList": "View list",
     "roommate.manageEmpty": "You have no roommate posts yet.",
@@ -613,6 +618,7 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "admin.overview.totalUsers": "Total users",
     "admin.overview.totalListings": "Total listings",
     "admin.overview.monthlyRevenue": "Revenue this month",
+    "admin.overview.monthlyRevenueNote": "Sample data",
     "admin.overview.pendingReports": "Pending reports",
 
     "admin.revenue.title": "Revenue management",

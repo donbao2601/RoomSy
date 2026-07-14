@@ -35,6 +35,12 @@ export function AdminNav({ locale }: { locale: Locale }) {
       >
         {t(locale, "admin.nav.reports")}
       </Link>
+      <Link
+        href="/admin/community"
+        className="rounded-lg bg-background-soft px-3 py-1.5 text-sm font-medium text-body hover:bg-background"
+      >
+        {t(locale, "admin.nav.community")}
+      </Link>
     </nav>
   );
 }

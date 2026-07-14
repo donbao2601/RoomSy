@@ -151,6 +151,8 @@ Build Auth + vòng lặp lõi cho ROOMSY. Dùng các bảng đã tạo ở schem
 
 **Tính năng:** Hệ thống ở ghép 🟢 · Đánh giá 2 chiều 🟢 · Thông báo hệ thống 🟡
 
+> ⚠️ **Cập nhật thực tế (14/7/2026):** "Ở ghép" và "Đánh giá 2 chiều" (2 tính năng 🟢 của giai đoạn này) thực tế bị dời lịch làm muộn — được code chung 1 phiên làm việc với GIAI ĐOẠN 4, và trong lịch sử git log được đặt tên **"GĐ4 Nhóm 1" (Ở ghép)** và **"GĐ4 Nhóm 2" (Đánh giá 2 chiều)**. Đây vẫn là nội dung backend thật của GIAI ĐOẠN 2 — không phải tính năng UI-mock mới của GIAI ĐOẠN 4. Xem thêm ghi chú tương ứng ở đầu mục GIAI ĐOẠN 4 bên dưới.
+
 ## 🎨 [DESIGN] — tuỳ chọn
 
 ```
@@ -241,7 +243,11 @@ Build Dashboard 3 role + Admin moderation cho ROOMSY.
 # GIAI ĐOẠN 4 — UI mock + Cộng đồng
 📅 **13/7 – 14/7** · 🎯 Hoàn thiện phần còn lại — ưu tiên tốc độ, không cần logic phức tạp
 
-**Tính năng:** Song ngữ ⚪ · Xác thực CCCD (badge) ⚪ · Quảng bá tin ⚪ · Đẩy tin ⚪ · Bảng giá VIP ⚪ · Báo cáo vi phạm ⚪ · Quản lý cộng đồng ⚪ · Quản lý doanh thu ⚪ · Blog/Cộng đồng 🟡
+**Tính năng:** Song ngữ ⚪ · Xác thực CCCD (badge) ⚪ · Quảng bá tin ⚪ · Đẩy tin ⚪ · Bảng giá VIP ⚪ · Báo cáo vi phạm ⚪ · Quản lý cộng đồng ⚪ · Quản lý doanh thu ⚪ · Blog/Cộng đồng ⚪ (100% mock, xem ghi chú)
+
+> ⚠️ **Cập nhật thực tế (14/7/2026):**
+> - Trong lịch sử git log, **"GĐ4 Nhóm 1" (Ở ghép)** và **"GĐ4 Nhóm 2" (Đánh giá 2 chiều)** không phải tính năng mới của giai đoạn này — đó là nội dung backend thật 🟢 của GIAI ĐOẠN 2 (xem ghi chú ở dòng ~152), bị dời lịch và code chung 1 phiên với phần còn lại của GĐ4. Chỉ **"GĐ4 Nhóm 3" (Cộng đồng/blog)** và **"GĐ4 Nhóm 4" (Admin kiểm duyệt cộng đồng)** mới đúng là nội dung UI-mock của GIAI ĐOẠN 4 theo kế hoạch gốc.
+> - "Blog/Cộng đồng" ở trên đã sửa từ 🟡 (kỳ vọng ban đầu: có backend nhẹ) thành ⚪ — code thực tế (`app/community/page.tsx`, `app/community/[id]/page.tsx`) dùng **100% dữ liệu mock cứng** trong `lib/mock/community.ts`, không có bất kỳ Supabase query nào, kể cả đọc. Bình luận chỉ tồn tại tạm trong state trình duyệt, mất khi F5.
 
 ## 🎨 [DESIGN] — tuỳ chọn
 

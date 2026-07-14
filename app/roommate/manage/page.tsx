@@ -28,12 +28,20 @@ export default async function RoommateManagePage() {
           <h1 className="text-xl font-semibold text-ink">
             {t(locale, "roommate.manageTitle")}
           </h1>
-          <Link
-            href="/roommate/new"
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
-          >
-            {t(locale, "roommate.newPost")}
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/roommate"
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              {t(locale, "roommate.manageBackToList")}
+            </Link>
+            <Link
+              href="/roommate/new"
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+            >
+              {t(locale, "roommate.newPost")}
+            </Link>
+          </div>
         </div>
 
         <div className="space-y-3">

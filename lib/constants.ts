@@ -60,7 +60,6 @@ export const VIP_TIERS = [
     quota: { C: 10, B: 5, HOT_A: 3, boost: 10 },
     priorityReview: true,
     badge: true,
-    popular: true,
   },
   {
     value: "kim_cuong",
@@ -69,6 +68,7 @@ export const VIP_TIERS = [
     quota: { C: 20, B: 10, HOT_A: 5, boost: 20 },
     priorityReview: true,
     badge: true,
+    popular: true,
   },
 ] as const;
 

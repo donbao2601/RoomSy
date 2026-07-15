@@ -87,7 +87,7 @@ export default async function VipPage() {
       </div>
 
       {/* Bảng so sánh gói hội viên */}
-      <div className="mx-auto mt-8 max-w-5xl overflow-x-auto rounded-xl border border-line bg-white shadow-sm">
+      <div className="mx-auto mt-8 max-w-5xl overflow-x-auto rounded-xl border border-line bg-white pt-5 shadow-sm">
         <table className="w-full min-w-[760px] border-collapse text-sm">
           <thead>
             <tr>
@@ -105,7 +105,7 @@ export default async function VipPage() {
                     }`}
                   >
                     {isPopular && (
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-gold px-3 py-0.5 text-[11px] font-semibold text-white">
+                      <span className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-gold px-3 py-0.5 text-[11px] font-semibold text-white shadow-sm">
                         {t(locale, "vip.popular")}
                       </span>
                     )}

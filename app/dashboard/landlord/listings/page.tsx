@@ -8,7 +8,7 @@ import { PromotionBadge } from "@/components/listings/PromotionBadge";
 import { formatPrice, STATUS_COLORS, statusLabel } from "@/lib/format";
 import { getLocale } from "@/lib/i18n/getLocale";
 import { t } from "@/lib/i18n/translate";
-import { effectiveTier } from "@/lib/promotion";
+import { effectiveTier, getTierTitleColor } from "@/lib/promotion";
 import type { Listing } from "@/lib/types";
 
 const STATUS_FILTERS = [
@@ -83,9 +83,9 @@ export default async function LandlordListingsPage({
               return (
                 <div
                   key={listing.id}
-                  className="flex flex-col gap-3 rounded-xl bg-white p-3 shadow-sm sm:flex-row sm:items-center sm:gap-4"
+                  className="flex flex-col gap-3 rounded-xl bg-white p-3 shadow-sm sm:flex-row sm:items-start sm:gap-4"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex min-w-0 flex-1 items-center gap-4">
                     <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
                       {listing.images?.[0] && (
                         <Image
@@ -99,22 +99,17 @@ export default async function LandlordListingsPage({
                     </div>
 
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold text-ink">
+                      <p className={`truncate text-sm font-semibold ${getTierTitleColor(tier)}`}>
                         {listing.title}
                       </p>
                       <p className="text-sm text-primary">
                         {formatPrice(listing.price)}
                       </p>
-                      <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                        <span
-                          className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
-                            STATUS_COLORS[listing.status]
-                          }`}
-                        >
-                          {statusLabel(locale, listing.status)}
-                        </span>
-                        <PromotionBadge tier={tier} locale={locale} />
-                      </div>
+                      {tier !== "normal" && (
+                        <div className="mt-1">
+                          <PromotionBadge tier={tier} locale={locale} />
+                        </div>
+                      )}
                       {listing.status === "rejected" && listing.reject_reason && (
                         <p className="mt-1 text-xs text-red-600">
                           {t(locale, "manage.rejectReason")}: {listing.reject_reason}
@@ -123,12 +118,22 @@ export default async function LandlordListingsPage({
                     </div>
                   </div>
 
-                  <ListingRowActions
-                    id={listing.id}
-                    status={listing.status}
-                    expiresAt={listing.expires_at}
-                    lastPushedAt={listing.last_pushed_at}
-                  />
+                  {/* Khu vực bên phải cố định width, không phụ thuộc số nút — badge trạng thái luôn neo cùng 1 điểm với nút hành động */}
+                  <div className="flex flex-col items-start gap-2 sm:w-60 sm:shrink-0 sm:items-end">
+                    <span
+                      className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+                        STATUS_COLORS[listing.status]
+                      }`}
+                    >
+                      {statusLabel(locale, listing.status)}
+                    </span>
+                    <ListingRowActions
+                      id={listing.id}
+                      status={listing.status}
+                      expiresAt={listing.expires_at}
+                      lastPushedAt={listing.last_pushed_at}
+                    />
+                  </div>
                 </div>
               );
             })

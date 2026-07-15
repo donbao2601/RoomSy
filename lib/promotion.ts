@@ -19,3 +19,15 @@ export function effectiveTier(listing: {
     ? (listing.tier as PromotionTier)
     : "normal";
 }
+
+/** Màu chữ tiêu đề tin đăng theo tier — đồng bộ với STYLES trong PromotionBadge. */
+const TIER_TITLE_COLOR: Record<PromotionTier, string> = {
+  normal: "text-ink",
+  C: "text-blue-600",
+  B: "text-gold",
+  HOT_A: "text-red-600",
+};
+
+export function getTierTitleColor(tier: PromotionTier): string {
+  return TIER_TITLE_COLOR[tier];
+}

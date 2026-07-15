@@ -83,6 +83,15 @@ export const PROMOTION_DURATION_DAYS = 7;
 export const BOOST_PRICE = 20000;
 export const BOOST_COOLDOWN_MINUTES = 60;
 
+/** Thông tin chuyển khoản mock cho luồng thanh toán Tin B/HOT A — không phải cổng thanh toán thật. */
+export const MOCK_BANK_INFO = {
+  bank: "Vietcombank - CN TP.HCM",
+  accountName: "CONG TY TNHH ROOMSY",
+  accountNumber: "0123456789",
+};
+
+export const MOCK_PAYMENT_WAIT_MS = 3000;
+
 export const GENDER_OPTIONS = [
   { value: "nam", label: "Nam" },
   { value: "nu", label: "Nữ" },

@@ -249,6 +249,18 @@ export const dictionary: Record<Locale, Record<string, string>> = {
       "Sau 7 ngày ưu tiên, tin sẽ trở về trạng thái Tin Thường và tiếp tục hiển thị đến hết 30 ngày.",
     "promote.ctaButton": "Xem tin đăng của tôi",
     "promote.ctaNote": "Chọn tin cần quảng bá",
+    "promote.paymentTitle": "Thanh toán quảng bá tin",
+    "promote.paymentAmountLabel": "Số tiền cần thanh toán",
+    "promote.qrNote": "Quét mã QR hoặc chuyển khoản theo thông tin bên dưới",
+    "promote.bankLabel": "Ngân hàng",
+    "promote.accountNameLabel": "Chủ tài khoản",
+    "promote.accountNumberLabel": "Số tài khoản",
+    "promote.transferContentLabel": "Nội dung chuyển khoản",
+    "promote.confirmedTransfer": "Tôi đã chuyển khoản",
+    "promote.confirmingPayment": "Đang xác nhận thanh toán...",
+    "promote.skipWait": "Bỏ qua chờ / Xem ngay",
+    "promote.mockPaymentNote":
+      "Đây là luồng thanh toán mô phỏng (mock), không phải cổng thanh toán thật.",
 
     // boost / post boosting
     "boost.sectionTitle": "Dịch vụ đẩy tin (Post Boosting)",
@@ -667,6 +679,18 @@ export const dictionary: Record<Locale, Record<string, string>> = {
       "After 7 featured days, the listing returns to Normal tier and stays visible until its 30-day period ends.",
     "promote.ctaButton": "View my listings",
     "promote.ctaNote": "Select a listing to promote",
+    "promote.paymentTitle": "Pay for listing promotion",
+    "promote.paymentAmountLabel": "Amount due",
+    "promote.qrNote": "Scan the QR code or transfer using the details below",
+    "promote.bankLabel": "Bank",
+    "promote.accountNameLabel": "Account holder",
+    "promote.accountNumberLabel": "Account number",
+    "promote.transferContentLabel": "Transfer note",
+    "promote.confirmedTransfer": "I've made the transfer",
+    "promote.confirmingPayment": "Confirming payment...",
+    "promote.skipWait": "Skip wait / View now",
+    "promote.mockPaymentNote":
+      "This is a simulated (mock) payment flow, not a real payment gateway.",
 
     "boost.sectionTitle": "Post boosting service",
     "boost.description": "Bring your listing to the top of search results",

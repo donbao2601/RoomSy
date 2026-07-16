@@ -31,3 +31,65 @@ const TIER_TITLE_COLOR: Record<PromotionTier, string> = {
 export function getTierTitleColor(tier: PromotionTier): string {
   return TIER_TITLE_COLOR[tier];
 }
+
+/** font-weight riêng theo tier — 'normal' trả về rỗng để nơi gọi tự giữ weight sẵn có. */
+const TIER_TITLE_FONT_WEIGHT: Record<PromotionTier, string> = {
+  normal: "",
+  C: "font-semibold",
+  B: "font-bold",
+  HOT_A: "font-extrabold",
+};
+
+export function getTierTitleFontWeight(tier: PromotionTier): string {
+  return TIER_TITLE_FONT_WEIGHT[tier];
+}
+
+/** text-transform tiêu đề theo tier. */
+export function getTierTitleTransform(tier: PromotionTier): string {
+  return tier === "normal" ? "normal-case" : "uppercase";
+}
+
+const TEXT_SIZE_SCALE = [
+  "text-xs",
+  "text-sm",
+  "text-base",
+  "text-lg",
+  "text-xl",
+  "text-2xl",
+  "text-3xl",
+  "text-4xl",
+  "text-5xl",
+  "text-6xl",
+  "text-7xl",
+  "text-8xl",
+  "text-9xl",
+];
+
+const TIER_TITLE_SIZE_STEP: Record<PromotionTier, number> = {
+  normal: 0,
+  C: 1,
+  B: 2,
+  HOT_A: 3,
+};
+
+/**
+ * Tăng size-step Tailwind text-* theo tier, dựa trên base class đang dùng tại nơi gọi
+ * (hỗ trợ nhiều class cách nhau bởi dấu cách, kể cả có responsive prefix vd "sm:text-2xl").
+ * Class không thuộc TEXT_SIZE_SCALE được giữ nguyên.
+ */
+export function getTierTitleSize(baseSizeClasses: string, tier: PromotionTier): string {
+  const steps = TIER_TITLE_SIZE_STEP[tier];
+  if (steps === 0) return baseSizeClasses;
+  return baseSizeClasses
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((token) => {
+      const colonIdx = token.lastIndexOf(":");
+      const prefix = colonIdx >= 0 ? token.slice(0, colonIdx + 1) : "";
+      const cls = colonIdx >= 0 ? token.slice(colonIdx + 1) : token;
+      const idx = TEXT_SIZE_SCALE.indexOf(cls);
+      if (idx === -1) return token;
+      return prefix + TEXT_SIZE_SCALE[Math.min(idx + steps, TEXT_SIZE_SCALE.length - 1)];
+    })
+    .join(" ");
+}

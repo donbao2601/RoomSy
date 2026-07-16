@@ -12,7 +12,13 @@ import { formatArea, formatPrice, typeLabel } from "@/lib/format";
 import { AMENITIES, LIFESTYLE_CONDITIONS } from "@/lib/constants";
 import { getLocale } from "@/lib/i18n/getLocale";
 import { t } from "@/lib/i18n/translate";
-import { effectiveTier, getTierTitleColor } from "@/lib/promotion";
+import {
+  effectiveTier,
+  getTierTitleColor,
+  getTierTitleFontWeight,
+  getTierTitleSize,
+  getTierTitleTransform,
+} from "@/lib/promotion";
 import type { Listing } from "@/lib/types";
 
 export default async function ListingDetailPage({
@@ -104,7 +110,11 @@ export default async function ListingDetailPage({
                 )}
                 <PromotionBadge tier={tier} locale={locale} />
               </div>
-              <h1 className={`mt-2 text-xl font-semibold sm:text-2xl ${getTierTitleColor(tier)}`}>
+              <h1
+                className={`mt-2 ${getTierTitleSize("text-xl sm:text-2xl", tier)} ${
+                  tier === "normal" ? "font-semibold" : getTierTitleFontWeight(tier)
+                } ${getTierTitleTransform(tier)} ${getTierTitleColor(tier)}`}
+              >
                 {listing.title}
               </h1>
               <p className="mt-1 text-sm text-muted">{location}</p>

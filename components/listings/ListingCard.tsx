@@ -4,7 +4,13 @@ import type { ListingWithOwner } from "@/lib/types";
 import { formatArea, formatPrice, typeLabel } from "@/lib/format";
 import { t } from "@/lib/i18n/translate";
 import type { Locale } from "@/lib/i18n/locale";
-import { effectiveTier, getTierTitleColor } from "@/lib/promotion";
+import {
+  effectiveTier,
+  getTierTitleColor,
+  getTierTitleFontWeight,
+  getTierTitleSize,
+  getTierTitleTransform,
+} from "@/lib/promotion";
 import { PromotionBadge } from "@/components/listings/PromotionBadge";
 import { VipBadge } from "@/components/vip/VipBadge";
 
@@ -50,7 +56,11 @@ export function ListingCard({
         )}
       </div>
       <div className="p-3">
-        <h3 className={`line-clamp-2 text-sm font-semibold ${getTierTitleColor(tier)}`}>
+        <h3
+          className={`line-clamp-2 ${getTierTitleSize("text-sm", tier)} ${
+            tier === "normal" ? "font-semibold" : getTierTitleFontWeight(tier)
+          } ${getTierTitleTransform(tier)} ${getTierTitleColor(tier)}`}
+        >
           {listing.title}
         </h3>
         <p className="mt-1 text-sm font-bold text-primary">

@@ -8,7 +8,12 @@ import { PromotionBadge } from "@/components/listings/PromotionBadge";
 import { formatPrice, STATUS_COLORS, statusLabel } from "@/lib/format";
 import { getLocale } from "@/lib/i18n/getLocale";
 import { t } from "@/lib/i18n/translate";
-import { effectiveTier, getTierTitleColor } from "@/lib/promotion";
+import {
+  effectiveTier,
+  getTierTitleColor,
+  getTierTitleFontWeight,
+  getTierTitleTransform,
+} from "@/lib/promotion";
 import type { Listing } from "@/lib/types";
 
 const STATUS_FILTERS = [
@@ -99,7 +104,12 @@ export default async function LandlordListingsPage({
                     </div>
 
                     <div className="min-w-0 flex-1">
-                      <p className={`truncate text-sm font-semibold ${getTierTitleColor(tier)}`}>
+                      <p
+                        className={`truncate text-sm ${
+                          tier === "normal" ? "font-semibold" : getTierTitleFontWeight(tier)
+                        } ${getTierTitleTransform(tier)} ${getTierTitleColor(tier)}`}
+                        title={listing.title}
+                      >
                         {listing.title}
                       </p>
                       <p className="text-sm text-primary">

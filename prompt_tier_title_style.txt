@@ -1,0 +1,40 @@
+YÊU CẦU: Hoàn thiện phân biệt trực quan giữa các tier quảng bá tin đăng (Tin Thường / Tin C / Tin B / Tin HOT A) theo đúng bảng giá trong tài liệu đồ án — hiện tại mới có màu, cần bổ sung kích thước chữ + chữ hoa.
+
+BƯỚC 1 — Đọc trước:
+- Đọc CLAUDE.md để nắm token màu, quy ước hiện có.
+- Tìm hàm getTierTitleColor(tier) hiện tại (đang dùng chung cho ListingCard, trang chi tiết tin, trang quản lý landlord/listings) và tất cả nơi đang gọi hàm này.
+
+BƯỚC 2 — Mở rộng logic:
+Mở rộng getTierTitleColor thành 1 hàm/style-map trả về đầy đủ: color + font-weight + text-transform (uppercase/normal-case) + size-step theo tier. KHÔNG đổi effectiveTier() (giữ nguyên logic 7 ngày ưu tiên đã có).
+
+Bảng logic (tier index tăng dần độ nổi bật):
+| Tier | Màu (giữ nguyên token đã làm) | Font-weight | Text-transform |
+|------|-------------------------------|-------------|-----------------|
+| Thường (index 0) | đen/ink | giữ nguyên hiện tại | normal-case |
+| Tin C (index 1) | xanh dương | semibold | uppercase |
+| Tin B (index 2) | vàng đậm | bold | uppercase |
+| Tin HOT A (index 3) | đỏ đậm + nhãn HOT | extrabold | uppercase |
+
+Kích thước chữ: mỗi tier tăng đúng 1 bước Tailwind text-size scale so với tier trước (vd nếu base hiện tại là text-base thì C=text-lg, B=text-xl, HOT A=text-2xl). LẤY BASE THEO CLASS HIỆN TẠI đang dùng ở từng nơi — không hardcode giá trị tuyệt đối, vì 3 context có base khác nhau.
+
+BƯỚC 3 — Áp dụng theo từng context (lưu ý overflow khác nhau giữa các nơi):
+
+1. ListingCard (dạng card lưới):
+   - Áp dụng đủ cả 4 bước: size + weight + uppercase.
+   - Tiêu đề Tin HOT A dài → CHO PHÉP card đó cao hơn các card khác trong cùng hàng (không ép min-height đồng nhất giữa các tier).
+   - Vẫn giữ line-clamp-2 làm giới hạn an toàn tối đa cho MỌI tier kể cả HOT A (tránh title cực dài làm vỡ layout hoàn toàn).
+
+2. Trang chi tiết tin (title dạng heading):
+   - Áp dụng đủ 4 bước (size + weight + uppercase). Không cần line-clamp vì heading đứng riêng, không ảnh hưởng layout khác.
+
+3. Trang quản lý landlord/listings (dạng bảng/list):
+   - CHỈ áp dụng màu + weight + uppercase. KHÔNG tăng kích thước chữ — giữ nguyên font-size hiện tại của cột tiêu đề.
+   - Lý do: đây là nơi vừa fix lỗi lệch hàng (nút hành động + badge trạng thái không thẳng hàng). Tăng chiều cao dòng ở đây rủi ro tái phát lỗi cũ.
+   - Giữ truncate 1 dòng (ellipsis) như hiện tại. Nếu chưa có, thêm title="..." (native tooltip) để xem đủ tiêu đề khi hover.
+
+BƯỚC 4 — Kiểm tra:
+- npx tsc --noEmit
+- next build
+- Test hiển thị đúng 4 tier (Thường/C/B/HOT A) ở cả 3 nơi.
+- Test riêng 1 title dài (~80-100 ký tự) ở Tin HOT A: xem ListingCard giãn hợp lý, trang chi tiết không vỡ, bảng landlord vẫn thẳng hàng (không tăng chiều cao dòng).
+- KHÔNG tự ý commit — dừng lại để mình xem qua trước.

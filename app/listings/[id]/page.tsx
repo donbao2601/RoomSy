@@ -16,6 +16,8 @@ import {
   effectiveTier,
   getTierTitleColor,
   getTierTitleFontWeight,
+  getTierTitleHighlightClass,
+  getTierTitleIcon,
   getTierTitleSize,
   getTierTitleTransform,
 } from "@/lib/promotion";
@@ -75,6 +77,8 @@ export default async function ListingDetailPage({
     .filter(Boolean);
 
   const tier = effectiveTier(listing);
+  const titleIcon = getTierTitleIcon(tier);
+  const titleHighlightClass = getTierTitleHighlightClass(tier);
 
   return (
     <main className="min-h-screen bg-background px-4 py-8">
@@ -115,7 +119,17 @@ export default async function ListingDetailPage({
                   tier === "normal" ? "font-semibold" : getTierTitleFontWeight(tier)
                 } ${getTierTitleTransform(tier)} ${getTierTitleColor(tier)}`}
               >
-                {listing.title}
+                {titleHighlightClass ? (
+                  <span className={titleHighlightClass}>
+                    {titleIcon && <span className="mr-1">{titleIcon}</span>}
+                    {listing.title}
+                  </span>
+                ) : (
+                  <>
+                    {titleIcon && <span className="mr-1">{titleIcon}</span>}
+                    {listing.title}
+                  </>
+                )}
               </h1>
               <p className="mt-1 text-sm text-muted">{location}</p>
             </div>

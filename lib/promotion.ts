@@ -93,3 +93,30 @@ export function getTierTitleSize(baseSizeClasses: string, tier: PromotionTier): 
     })
     .join(" ");
 }
+
+/** Icon gắn liền trước tiêu đề theo tier — áp dụng cả 3 nơi (card/chi tiết/bảng landlord). */
+const TIER_TITLE_ICON: Record<PromotionTier, string> = {
+  normal: "",
+  C: "",
+  B: "⭐",
+  HOT_A: "🔥",
+};
+
+export function getTierTitleIcon(tier: PromotionTier): string {
+  return TIER_TITLE_ICON[tier];
+}
+
+/**
+ * Class cho dải nền "highlight chip" bao quanh tiêu đề — chỉ Tin HOT A có giá trị,
+ * chỉ dùng ở ListingCard/trang chi tiết (KHÔNG dùng ở bảng landlord).
+ * box-decoration-break: clone để nền không vỡ hình khi tiêu đề xuống dòng (line-clamp-2).
+ * Glow là bản tĩnh (box-shadow mờ) — TODO: nâng cấp thành shimmer động ở bước sau nếu cần.
+ */
+const TIER_TITLE_HIGHLIGHT_CLASS: Partial<Record<PromotionTier, string>> = {
+  HOT_A:
+    "rounded bg-red-50 px-1.5 py-0.5 shadow-[0_0_10px_2px_rgba(220,38,38,0.25)] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]",
+};
+
+export function getTierTitleHighlightClass(tier: PromotionTier): string {
+  return TIER_TITLE_HIGHLIGHT_CLASS[tier] ?? "";
+}

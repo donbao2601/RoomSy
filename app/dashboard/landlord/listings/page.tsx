@@ -12,6 +12,7 @@ import {
   effectiveTier,
   getTierTitleColor,
   getTierTitleFontWeight,
+  getTierTitleIcon,
   getTierTitleTransform,
 } from "@/lib/promotion";
 import type { Listing } from "@/lib/types";
@@ -85,6 +86,7 @@ export default async function LandlordListingsPage({
           {listings && listings.length > 0 ? (
             (listings as Listing[]).map((listing) => {
               const tier = effectiveTier(listing);
+              const titleIcon = getTierTitleIcon(tier);
               return (
                 <div
                   key={listing.id}
@@ -110,6 +112,7 @@ export default async function LandlordListingsPage({
                         } ${getTierTitleTransform(tier)} ${getTierTitleColor(tier)}`}
                         title={listing.title}
                       >
+                        {titleIcon && <span className="mr-1">{titleIcon}</span>}
                         {listing.title}
                       </p>
                       <p className="text-sm text-primary">

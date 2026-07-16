@@ -1,0 +1,25 @@
+YÊU CẦU BỔ SUNG: Thêm icon + hiệu ứng nổi bật riêng cho tiêu đề Tin B và Tin HOT A. Phần màu/size/uppercase đã làm xong ở bước trước (commit cdf7912) — KHÔNG đổi lại phần đó.
+
+PHẠM VI:
+
+1. Tin HOT A (🔥):
+   - Thêm icon 🔥 ngay trước tiêu đề (đây là icon gắn liền với text tiêu đề, khác với badge "🔥 HOT" đã có sẵn ở góc ảnh — giữ nguyên badge cũ, không thay).
+   - THÊM MỚI: dải nền đỏ nhạt (highlight chip) bao quanh tiêu đề — ưu tiên dùng token màu đỏ nhạt có sẵn trong CLAUDE.md nếu đã có; nếu chưa có token phù hợp thì dùng sắc độ nhạt tương ứng với token đỏ đậm đang dùng cho text tier này.
+   - THÊM MỚI: hiệu ứng "đánh bóng nhẹ" — làm bản TĨNH (soft glow: box-shadow đỏ nhạt mờ quanh chip). KHÔNG làm animation/shimmer ở bước này để tránh rủi ro thời gian + hiệu năng. Có thể để comment TODO cho animation sau nếu muốn nâng cấp về sau.
+   - Nền highlight + glow chỉ áp dụng ở ListingCard và trang chi tiết tin (nơi hướng tới user, mục đích thu hút). KHÔNG áp dụng ở bảng landlord/listings.
+   - Icon 🔥 (không kèm nền/glow) thì áp dụng CẢ 3 nơi kể cả bảng landlord — icon nhỏ gọn không ảnh hưởng layout, giúp admin nhận diện nhanh khi quản lý.
+   - LƯU Ý KỸ THUẬT: tiêu đề đang dùng line-clamp-2. Nếu title dài xuống 2 dòng, phần nền highlight cần dùng box-decoration-break: clone (hoặc kỹ thuật CSS tương đương) để mỗi dòng có bo góc riêng, tránh nền bị vỡ hình khi ngắt dòng.
+
+2. Tin B (⭐):
+   - Thêm icon ⭐ ngay trước tiêu đề — nhẹ hơn Tin HOT A, KHÔNG kèm nền highlight, KHÔNG kèm glow.
+   - Áp dụng cả 3 nơi: ListingCard, trang chi tiết, bảng landlord (icon nhỏ gọn, không ảnh hưởng layout).
+
+3. Tin C và Tin Thường: KHÔNG đổi gì thêm — giữ nguyên như đã làm ở bước trước.
+
+KIỂM TRA SAU KHI LÀM:
+- npx tsc --noEmit
+- npx next build
+- Test icon hiển thị đúng vị trí trước tiêu đề, không đẩy lệch dòng đầu khi title ngắn.
+- Test riêng 1 tiêu đề Tin HOT A dài (~80-100 ký tự) xuống 2 dòng — xem nền highlight có bị vỡ hình không.
+- Test bảng landlord: xác nhận KHÔNG có nền/glow ở đây, chỉ có icon + màu + weight + uppercase như cũ; nút hành động + badge trạng thái vẫn thẳng hàng (điểm nhạy cảm đã fix trước đó).
+- KHÔNG tự ý commit — dừng lại để mình xem qua trước.

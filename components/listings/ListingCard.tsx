@@ -8,6 +8,8 @@ import {
   effectiveTier,
   getTierTitleColor,
   getTierTitleFontWeight,
+  getTierTitleHighlightClass,
+  getTierTitleIcon,
   getTierTitleSize,
   getTierTitleTransform,
 } from "@/lib/promotion";
@@ -24,6 +26,8 @@ export function ListingCard({
   const cover = listing.images?.[0];
   const location = [listing.district, listing.city].filter(Boolean).join(", ");
   const tier = effectiveTier(listing);
+  const titleIcon = getTierTitleIcon(tier);
+  const titleHighlightClass = getTierTitleHighlightClass(tier);
 
   return (
     <Link
@@ -61,7 +65,17 @@ export function ListingCard({
             tier === "normal" ? "font-semibold" : getTierTitleFontWeight(tier)
           } ${getTierTitleTransform(tier)} ${getTierTitleColor(tier)}`}
         >
-          {listing.title}
+          {titleHighlightClass ? (
+            <span className={titleHighlightClass}>
+              {titleIcon && <span className="mr-1">{titleIcon}</span>}
+              {listing.title}
+            </span>
+          ) : (
+            <>
+              {titleIcon && <span className="mr-1">{titleIcon}</span>}
+              {listing.title}
+            </>
+          )}
         </h3>
         <p className="mt-1 text-sm font-bold text-primary">
           {formatPrice(listing.price)}

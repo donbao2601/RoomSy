@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 
 export type CurrentUser = {
@@ -13,8 +14,13 @@ export type CurrentUser = {
   vip_expires_at: string | null;
 };
 
-/** Server-side helper: returns the signed-in user's `public.users` row, or null. */
-export async function getCurrentUser(): Promise<CurrentUser | null> {
+/**
+ * Server-side helper: returns the signed-in user's `public.users` row, or null.
+ * Wrapped in React's cache() so repeated calls within the same request (e.g. Navbar
+ * in the root layout + the page component) dedupe into a single auth.getUser() +
+ * users query instead of re-fetching per call site.
+ */
+export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   const supabase = createClient();
 
   const {
@@ -32,4 +38,4 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     .single();
 
   return data as CurrentUser | null;
-}
+});

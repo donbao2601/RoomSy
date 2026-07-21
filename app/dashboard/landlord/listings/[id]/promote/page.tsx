@@ -72,13 +72,29 @@ export default async function PromoteListingPage({
           )}
 
           {!notExpired ? (
-            <p className="mt-4 text-sm text-red-600">
-              {t(locale, "manage.expired")}
-            </p>
+            <>
+              <p className="mt-4 text-sm text-red-600">
+                {t(locale, "manage.expired")}
+              </p>
+              <Link
+                href="/dashboard/landlord/listings"
+                className="mt-3 inline-block rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+              >
+                {t(locale, "promote.backToManage")}
+              </Link>
+            </>
           ) : listing.status !== "active" ? (
-            <p className="mt-4 text-sm text-red-600">
-              {t(locale, "manage.statusActive")}
-            </p>
+            <>
+              <p className="mt-4 text-sm text-red-600">
+                {t(locale, "promote.notActiveYet")}
+              </p>
+              <Link
+                href="/dashboard/landlord/listings"
+                className="mt-3 inline-block rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+              >
+                {t(locale, "promote.backToManage")}
+              </Link>
+            </>
           ) : (
             <div className="mt-5">
               <h2 className="mb-3 text-sm font-semibold text-ink">

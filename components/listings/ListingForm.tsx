@@ -40,6 +40,7 @@ export function ListingForm({ mode, userId, initialListing }: Props) {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [createdListingId, setCreatedListingId] = useState<string | null>(null);
 
   const [title, setTitle] = useState(initialListing?.title ?? "");
   const [description, setDescription] = useState(
@@ -129,13 +130,21 @@ export function ListingForm({ mode, userId, initialListing }: Props) {
       };
 
       if (mode === "create") {
-        const { error: insertError } = await supabase.from("listings").insert({
-          ...payload,
-          user_id: userId,
-          status: "pending",
-          tier: "normal",
-        });
+        const { data: inserted, error: insertError } = await supabase
+          .from("listings")
+          .insert({
+            ...payload,
+            user_id: userId,
+            status: "pending",
+            tier: "normal",
+          })
+          .select("id")
+          .single();
         if (insertError) throw insertError;
+
+        setCreatedListingId(inserted.id);
+        router.refresh();
+        return;
       } else if (initialListing) {
         const { error: updateError } = await supabase
           .from("listings")
@@ -151,6 +160,42 @@ export function ListingForm({ mode, userId, initialListing }: Props) {
     } finally {
       setLoading(false);
     }
+  }
+
+  if (createdListingId) {
+    return (
+      <div className="mx-auto max-w-2xl rounded-xl bg-white p-6 shadow-sm sm:p-8">
+        <h2 className="text-lg font-semibold text-ink">Đăng tin thành công!</h2>
+        <p className="mt-1 text-sm text-body">
+          Tin của bạn đã được gửi và đang chờ duyệt. Bạn có thể hoàn tất với gói Tin
+          Thường miễn phí, hoặc quảng bá tin ngay để tăng khả năng tiếp cận.
+        </p>
+
+        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <button
+            type="button"
+            onClick={() => {
+              router.push("/dashboard/landlord/listings");
+              router.refresh();
+            }}
+            className="rounded-lg border border-line bg-white px-4 py-3 text-sm font-semibold text-ink hover:bg-background"
+          >
+            Hoàn tất - Đăng Tin Thường miễn phí
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              router.push(
+                `/dashboard/landlord/listings/${createdListingId}/promote`
+              )
+            }
+            className="rounded-lg border border-line bg-white px-4 py-3 text-sm font-semibold text-ink hover:bg-background"
+          >
+            Quảng bá tin ngay
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (

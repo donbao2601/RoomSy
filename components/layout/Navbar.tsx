@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/supabase/getCurrentUser";
 import { MobileNav, type NavItem } from "@/components/layout/MobileNav";
@@ -37,10 +38,25 @@ export async function Navbar({ locale }: { locale: Locale }) {
   }
 
   return (
-    <header className="border-b border-line bg-white">
-      <div className="relative mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <Link href="/" className="text-lg font-bold text-primary">
-          ROOMSY
+    <header className="relative z-30 h-16 border-b border-line bg-white md:fixed md:inset-x-0 md:top-0 md:h-[88px]">
+      <div className="relative mx-auto flex h-full max-w-6xl items-center justify-between px-4">
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/roomsy-logo-full.png"
+            alt="ROOMSY"
+            width={279}
+            height={176}
+            priority
+            className="hidden h-[68px] w-auto md:block"
+          />
+          <Image
+            src="/roomsy-logo-wordmark.png"
+            alt="ROOMSY"
+            width={310}
+            height={112}
+            priority
+            className="h-10 w-auto md:hidden"
+          />
         </Link>
 
         <MobileNav

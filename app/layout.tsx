@@ -14,6 +14,12 @@ const beVietnamPro = Be_Vietnam_Pro({
 export const metadata: Metadata = {
   title: "ROOMSY",
   description: "Marketplace cho thuê phòng trọ, căn hộ & ở ghép tại Việt Nam",
+  icons: {
+    icon: [
+      { url: "/roomsy-favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/roomsy-favicon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -28,7 +34,7 @@ export default function RootLayout({
       <body className={`${beVietnamPro.variable} font-sans antialiased`}>
         <LanguageProvider initialLocale={locale}>
           <Navbar locale={locale} />
-          {children}
+          <div className="md:pt-[88px]">{children}</div>
         </LanguageProvider>
       </body>
     </html>

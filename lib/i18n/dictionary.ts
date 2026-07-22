@@ -42,6 +42,8 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "search.apply": "Áp dụng bộ lọc",
     "search.results": "kết quả phù hợp",
     "search.noResults": "Không tìm thấy tin đăng phù hợp.",
+    "search.selectCityFirst": "Chọn thành phố trước",
+    "search.noMatch": "Không có kết quả",
 
     // listing card / detail
     "listing.noImage": "Chưa có ảnh",
@@ -480,6 +482,8 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "search.apply": "Apply filters",
     "search.results": "results found",
     "search.noResults": "No matching listings found.",
+    "search.selectCityFirst": "Select a city first",
+    "search.noMatch": "No matches",
 
     "listing.noImage": "No image",
     "listing.area": "Area",

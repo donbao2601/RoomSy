@@ -1,70 +1,40 @@
-import Link from "next/link";
-import { CommunityPostCard } from "@/components/community/CommunityPostCard";
-import { MOCK_COMMUNITY_POSTS, type CommunityCategory } from "@/lib/mock/community";
+import { CommunityFeed } from "@/components/community/CommunityFeed";
+import { CommunitySidebar } from "@/components/community/CommunitySidebar";
+import { CommunityBottomNav } from "@/components/community/CommunityBottomNav";
+import { MOCK_COMMUNITY_POSTS } from "@/lib/mock/community";
 import { getLocale } from "@/lib/i18n/getLocale";
+import { getCurrentUser } from "@/lib/supabase/getCurrentUser";
 import { t } from "@/lib/i18n/translate";
 
-const CATEGORIES: CommunityCategory[] = ["guide", "warning", "roommate", "finance"];
+function accountHrefFor(role?: string) {
+  if (role === "landlord") return "/dashboard/landlord";
+  if (role === "admin") return "/admin";
+  if (role === "tenant") return "/dashboard/tenant";
+  return "/auth/login";
+}
 
-export default function CommunityListPage({
+export default async function CommunityListPage({
   searchParams,
 }: {
   searchParams: { category?: string };
 }) {
   const locale = getLocale();
+  const user = await getCurrentUser();
   const category = searchParams.category ?? "";
 
-  const posts = category
-    ? MOCK_COMMUNITY_POSTS.filter((p) => p.category === category)
-    : MOCK_COMMUNITY_POSTS;
-
-  function tabHref(target?: CommunityCategory) {
-    return target ? `/community?category=${target}` : "/community";
-  }
-
   return (
-    <main className="min-h-screen bg-background px-4 py-8">
-      <div className="mx-auto max-w-6xl">
-        <h1 className="mb-6 text-xl font-semibold text-ink">
-          {t(locale, "community.pageTitle")}
-        </h1>
-
-        <div className="mb-6 flex flex-wrap gap-2">
-          <Link
-            href={tabHref()}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium ${
-              !category
-                ? "bg-primary text-white"
-                : "bg-background-soft text-body hover:bg-white"
-            }`}
-          >
-            {t(locale, "community.categoryAll")}
-          </Link>
-          {CATEGORIES.map((c) => (
-            <Link
-              key={c}
-              href={tabHref(c)}
-              className={`rounded-full px-4 py-1.5 text-sm font-medium ${
-                category === c
-                  ? "bg-primary text-white"
-                  : "bg-background-soft text-body hover:bg-white"
-              }`}
-            >
-              {t(locale, `community.category.${c}`)}
-            </Link>
-          ))}
+    <main className="min-h-screen bg-background px-4 py-8 pb-20 md:pb-8">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
+        <div>
+          <h1 className="mb-6 text-xl font-semibold text-ink">
+            {t(locale, "community.pageTitle")}
+          </h1>
+          <CommunityFeed posts={MOCK_COMMUNITY_POSTS} locale={locale} initialCategory={category} />
         </div>
-
-        {posts.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {posts.map((post) => (
-              <CommunityPostCard key={post.id} post={post} locale={locale} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-body">{t(locale, "community.empty")}</p>
-        )}
+        <CommunitySidebar locale={locale} />
       </div>
+
+      <CommunityBottomNav locale={locale} accountHref={accountHrefFor(user?.role)} />
     </main>
   );
 }

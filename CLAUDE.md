@@ -86,3 +86,17 @@ Mỗi Giai đoạn = 1 phiên Claude Code riêng. Không cần dán lại toàn 
 - Social KPI: Fanpage 10K vs 20K / TikTok 10K vs 30K — chưa chốt
 - Phongtro123 thiếu trong phần phân tích đối thủ dù có trong SWOT
 - Giá VIP trung bình 300K — chưa rõ cơ sở tính
+
+## GĐ6 — Cộng đồng (redesign)
+
+Trang Cộng đồng đã được redesign theo mockup mới trong Claude Design (file "Roomsy - Cộng đồng.dc.html", project "Roomsy handoff documentation"). Các thay đổi so với bản cũ:
+
+- Filter chip bổ sung: "Cảnh báo lừa đảo" — dùng tông màu đỏ/cam nhạt (khác với các chip còn lại đang dùng tông xanh lá), để phân biệt rõ đây là nội dung cảnh báo.
+- Có dropdown sắp xếp "Mới nhất / Nổi bật" cạnh ô tìm kiếm bài viết.
+- Có empty state riêng khi lọc ra 0 kết quả: minh hoạ icon + thông điệp "Không tìm thấy bài viết phù hợp" + nút "Xem tất cả bài viết".
+- Bottom nav mobile: 5 mục "Trang chủ / Thuê phòng / Ở ghép / Cộng đồng / Tài khoản" — không có mục "Tin nhắn".
+- Layout mobile: sidebar phải (Chủ đề nổi bật, Nội quy cộng đồng, Bạn cần hỗ trợ) xếp dọc xuống cuối trang dưới feed, không phải cột riêng như desktop.
+- Layout desktop: giữ header ngang cố định (sticky), sidebar phải 3 block như bản hiện có.
+- Header dùng logo full mới (roomsy-logo-full.png desktop / roomsy-logo-wordmark.png mobile) — đồng bộ với header toàn site đã áp dụng ở GĐ6 bước 1-2.
+
+Lưu ý: file "Roomsy - Giai đoạn 1 (standalone).html" CHƯA được đồng bộ với mockup mới này (to-do, không chặn code). Khi cần đối chiếu chi tiết token/spacing chính xác, tham khảo trực tiếp mockup trong Claude Design.

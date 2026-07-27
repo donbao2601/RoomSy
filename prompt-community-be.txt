@@ -1,0 +1,35 @@
+BỐI CẢNH
+Roomsy - chuyển trang Cộng đồng từ mock data sang backend thật (Supabase).
+Đang ở branch feat/community-be. KHÔNG được commit/push tự động - chỉ code, đợi tôi review rồi tự commit.
+Đã verify trước: bảng community_posts và community_comments đã tồn tại trong Supabase (schema.sql:121, 136),
+RLS policies đã đủ và đúng (dòng 317-356): user tự insert/update/delete post của mình, admin update/delete được mọi post qua is_admin().
+KHÔNG cần viết migration SQL mới - hạ tầng DB đã sẵn sàng 100%.
+
+PHẠM VI - PHƯƠNG ÁN A RÚT GỌN (không làm gì ngoài danh sách này)
+
+1. Trang /community (app/community/page.tsx + CommunityFeed.tsx)
+   - Thay MOCK_COMMUNITY_POSTS bằng query Supabase thật (SELECT từ community_posts, chỉ lấy status = 'approved' hoặc tương đương cho public xem)
+   - Giữ nguyên toàn bộ UI, filter/sort/search hiện có - chỉ đổi nguồn data
+   - Form đăng bài mới (nếu đã có UI) phải INSERT thật vào community_posts, gán user_id = auth.uid(), status mặc định = 'pending' (chờ duyệt)
+   - KHÔNG làm upload ảnh thật - dùng thumbnail_url mặc định theo category (map cứng 1 ảnh/category, có thể dùng ảnh placeholder có sẵn trong public/ nếu có, hoặc 1 URL ảnh chung tạm thời)
+
+2. Trang /admin/community (app/admin/community/page.tsx + AdminCommunityModeration)
+   - Thay MOCK_COMMUNITY_POSTS bằng query Supabase thật (SELECT toàn bộ post không lọc status, để admin thấy cả pending)
+   - Nút Duyệt = UPDATE status -> 'approved'
+   - Nút Xoá/Ẩn = UPDATE status -> 'hidden' hoặc 'rejected' (đặt tên giá trị nhất quán với cột status hiện có - tự kiểm tra giá trị enum/check constraint hiện tại của cột status trước khi quyết định, báo lại tôi nếu cột status là free text chưa có ràng buộc)
+   - KHÔNG làm lịch sử xử lý / audit log - chỉ cần đổi status ngay khi bấm nút
+
+3. Comment (community_comments) - GIỮ NGUYÊN MOCK, không đụng tới trong lần này
+
+4. Seed data
+   - Lấy khoảng 5-8 bài từ MOCK_COMMUNITY_POSTS hiện tại, insert thật vào bảng community_posts qua 1 script chạy 1 lần (không phải seed tự động mỗi lần build)
+   - Set status đa dạng: vài bài 'approved', 1-2 bài 'pending' (để test luồng duyệt của admin còn dữ liệu để duyệt)
+   - Gán user_id = 1 trong các demo account đã có sẵn (vd user1@roomsy.vn) - tự kiểm tra id thật của account này trong bảng users trước khi insert
+
+QUY TRÌNH BẮT BUỘC
+- Trước khi sửa: tự kiểm tra lại 1 lần nữa cột status hiện tại của community_posts đang cho phép giá trị gì (enum/check constraint hay free text) - báo tôi nếu phát hiện gì khác so với giả định
+- Sau khi code xong: chạy tsc --noEmit và next build, báo kết quả pass/fail
+- KHÔNG tự ý mở rộng thêm tính năng ngoài 4 mục trên (không làm likes, không làm report, không làm comment thật)
+- KHÔNG commit, KHÔNG push - dừng lại sau khi build pass để tôi tự test bằng mắt trên trình duyệt trước
+
+Xong bước nào báo bước đó, đừng làm liền tù tì không dừng.

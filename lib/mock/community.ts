@@ -1,9 +1,12 @@
 /**
- * GĐ4 Nhóm 3 — Cộng đồng/blog PROTOTYPE-ONLY: dữ liệu MẪU (seed cứng), không
- * đọc/ghi bảng community_posts/community_comments thật. 4 nhóm nội dung theo
- * tài liệu đồ án: Kiến thức thuê trọ (guide) / Cảnh báo lừa đảo (warning) /
- * Review (roommate — tên cột giữ nguyên theo schema.sql, nhãn hiển thị là
- * "Review" theo đúng tài liệu) / Tài chính cá nhân (finance).
+ * Dữ liệu mẫu cho 4 nhóm nội dung cộng đồng theo tài liệu đồ án: Kiến thức
+ * thuê trọ (guide) / Cảnh báo lừa đảo (warning) / Review (roommate — tên cột
+ * giữ nguyên theo schema.sql, nhãn hiển thị là "Review") / Tài chính cá nhân
+ * (finance). Trang /community + /admin/community đã đọc từ bảng
+ * community_posts thật — mảng này giờ chỉ còn dùng làm nguồn cho
+ * scripts/seed-community.mjs và làm type shape (MockCommunityPost/MockComment)
+ * cho CommunityFeed/CommentSection. Bình luận (community_comments) vẫn mock,
+ * chưa nối DB.
  */
 export type CommunityCategory = "guide" | "warning" | "roommate" | "finance";
 

@@ -1,19 +1,37 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CommentSection } from "@/components/community/CommentSection";
-import { MOCK_COMMUNITY_POSTS } from "@/lib/mock/community";
 import { getLocale } from "@/lib/i18n/getLocale";
+import { createClient } from "@/lib/supabase/server";
 import { t } from "@/lib/i18n/translate";
+import type { CommunityPostWithAuthor } from "@/lib/types";
 
-export default function CommunityDetailPage({
+export default async function CommunityDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
   const locale = getLocale();
-  const post = MOCK_COMMUNITY_POSTS.find((p) => p.id === params.id);
+  const supabase = createClient();
+  const { data: row } = await supabase
+    .from("community_posts")
+    .select("id, category, title, content, view_count, created_at, author:users(full_name)")
+    .eq("id", params.id)
+    .eq("status", "approved")
+    .single();
 
-  if (!post) notFound();
+  if (!row) notFound();
+
+  const typedRow = row as unknown as CommunityPostWithAuthor;
+  const post = {
+    id: typedRow.id,
+    category: typedRow.category ?? "guide",
+    title: typedRow.title,
+    author: typedRow.author?.full_name ?? "Người dùng ROOMSY",
+    date: typedRow.created_at.slice(0, 10),
+    viewCount: typedRow.view_count,
+    content: typedRow.content ?? "",
+  };
 
   return (
     <main className="min-h-screen bg-background px-4 py-8">
@@ -44,7 +62,7 @@ export default function CommunityDetailPage({
           </p>
 
           <div className="mt-6 border-t border-line pt-5">
-            <CommentSection initialComments={post.comments} />
+            <CommentSection initialComments={[]} />
           </div>
         </div>
       </div>

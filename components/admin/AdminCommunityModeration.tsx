@@ -1,19 +1,23 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageProvider";
-import type { CommunityPostStatus, CommunityPostWithAuthor } from "@/lib/types";
+import type { MockCommunityPost } from "@/lib/mock/community";
 
-const POST_STATUS_STYLE: Record<CommunityPostStatus, string> = {
+/**
+ * Prototype (rebuild): trạng thái duyệt chỉ tồn tại trong state cục bộ của
+ * trình duyệt, KHÔNG ghi vào Supabase — mất khi tải lại trang.
+ */
+type ModerationStatus = "pending" | "approved" | "hidden" | "rejected";
+
+const POST_STATUS_STYLE: Record<ModerationStatus, string> = {
   pending: "bg-info-bg text-info",
   approved: "bg-primary/10 text-primary",
   hidden: "bg-warning-bg text-warning",
   rejected: "bg-error/10 text-error",
 };
 
-const POST_STATUS_LABEL_KEY: Record<CommunityPostStatus, string> = {
+const POST_STATUS_LABEL_KEY: Record<ModerationStatus, string> = {
   pending: "admin.community.statusPending",
   approved: "admin.community.statusApproved",
   hidden: "admin.community.statusHidden",
@@ -23,11 +27,10 @@ const POST_STATUS_LABEL_KEY: Record<CommunityPostStatus, string> = {
 export function AdminCommunityModeration({
   posts,
 }: {
-  posts: CommunityPostWithAuthor[];
+  posts: MockCommunityPost[];
 }) {
   const { t } = useLanguage();
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [statusMap, setStatusMap] = useState<Record<string, ModerationStatus>>({});
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
@@ -36,15 +39,10 @@ export function AdminCommunityModeration({
     return () => clearTimeout(timer);
   }, [toast]);
 
-  function updateStatus(postId: string, next: CommunityPostStatus) {
+  function updateStatus(postId: string, next: ModerationStatus) {
     if (next === "rejected" && !confirm(t("admin.community.rejectConfirm"))) return;
-
-    startTransition(async () => {
-      const supabase = createClient();
-      await supabase.from("community_posts").update({ status: next }).eq("id", postId);
-      setToast(t("admin.community.toastDone"));
-      router.refresh();
-    });
+    setStatusMap((prev) => ({ ...prev, [postId]: next }));
+    setToast(t("admin.community.toastDone"));
   }
 
   return (
@@ -65,52 +63,53 @@ export function AdminCommunityModeration({
             </tr>
           </thead>
           <tbody>
-            {posts.map((post) => (
-              <tr key={post.id} className="border-b border-line last:border-0">
-                <td className="max-w-xs px-4 py-3">
-                  <p className="truncate font-medium text-ink">{post.title}</p>
-                  <p className="text-xs text-muted">
-                    {post.author?.full_name ?? "Người dùng ROOMSY"}
-                  </p>
-                </td>
-                <td className="px-4 py-3 text-body">
-                  {t(`community.category.${post.category ?? "guide"}`)}
-                </td>
-                <td className="px-4 py-3 text-body">{post.created_at.slice(0, 10)}</td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${POST_STATUS_STYLE[post.status]}`}
-                  >
-                    {t(POST_STATUS_LABEL_KEY[post.status])}
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex flex-wrap gap-1.5">
-                    <button
-                      onClick={() => updateStatus(post.id, "approved")}
-                      disabled={isPending || post.status === "approved"}
-                      className="rounded-lg border border-line px-2 py-1 text-xs font-medium text-body hover:bg-background disabled:opacity-50"
+            {posts.map((post) => {
+              const status = statusMap[post.id] ?? "approved";
+              return (
+                <tr key={post.id} className="border-b border-line last:border-0">
+                  <td className="max-w-xs px-4 py-3">
+                    <p className="truncate font-medium text-ink">{post.title}</p>
+                    <p className="text-xs text-muted">{post.author}</p>
+                  </td>
+                  <td className="px-4 py-3 text-body">
+                    {t(`community.category.${post.category}`)}
+                  </td>
+                  <td className="px-4 py-3 text-body">{post.date}</td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${POST_STATUS_STYLE[status]}`}
                     >
-                      {t("admin.community.approve")}
-                    </button>
-                    <button
-                      onClick={() => updateStatus(post.id, "hidden")}
-                      disabled={isPending || post.status === "hidden"}
-                      className="rounded-lg border border-warning px-2 py-1 text-xs font-medium text-warning hover:bg-warning-bg disabled:opacity-50"
-                    >
-                      {t("admin.community.hide")}
-                    </button>
-                    <button
-                      onClick={() => updateStatus(post.id, "rejected")}
-                      disabled={isPending || post.status === "rejected"}
-                      className="rounded-lg border border-error px-2 py-1 text-xs font-medium text-error hover:bg-error/10 disabled:opacity-50"
-                    >
-                      {t("admin.community.reject")}
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                      {t(POST_STATUS_LABEL_KEY[status])}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap gap-1.5">
+                      <button
+                        onClick={() => updateStatus(post.id, "approved")}
+                        disabled={status === "approved"}
+                        className="rounded-lg border border-line px-2 py-1 text-xs font-medium text-body hover:bg-background disabled:opacity-50"
+                      >
+                        {t("admin.community.approve")}
+                      </button>
+                      <button
+                        onClick={() => updateStatus(post.id, "hidden")}
+                        disabled={status === "hidden"}
+                        className="rounded-lg border border-warning px-2 py-1 text-xs font-medium text-warning hover:bg-warning-bg disabled:opacity-50"
+                      >
+                        {t("admin.community.hide")}
+                      </button>
+                      <button
+                        onClick={() => updateStatus(post.id, "rejected")}
+                        disabled={status === "rejected"}
+                        className="rounded-lg border border-error px-2 py-1 text-xs font-medium text-error hover:bg-error/10 disabled:opacity-50"
+                      >
+                        {t("admin.community.reject")}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

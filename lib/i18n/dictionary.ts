@@ -153,14 +153,16 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "review.criteria.gia_hop_ly": "Giá hợp lý",
     "dashboard.tenant.myReviewsEmpty": "Bạn chưa viết đánh giá nào.",
 
-    // community/blog (bài viết: backend thật community_posts; bình luận: mock)
+    // community/blog (prototype/mock — rebuild, xem prompt-community-rebuild.txt)
     "community.pageTitle": "Cộng đồng",
-    "community.category.guide": "Kiến thức thuê trọ",
-    "community.category.warning": "Cảnh báo lừa đảo",
-    "community.category.roommate": "Review",
-    "community.category.finance": "Tài chính cá nhân",
+    "community.heroSubtitle": "Chia sẻ, hỏi đáp và đánh giá để tìm nơi ở tốt hơn mỗi ngày.",
+    "community.createPost": "Tạo bài viết",
+    "community.category.qna": "Hỏi đáp",
+    "community.category.review": "Review",
+    "community.category.experience": "Kinh nghiệm",
     "community.categoryAll": "Tất cả",
     "community.views": "lượt xem",
+    "community.save": "Lưu",
     "community.commentsTitle": "Bình luận",
     "community.commentsEmpty": "Chưa có bình luận nào.",
     "community.commentPlaceholder": "Viết bình luận...",
@@ -177,6 +179,11 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "community.emptyFiltered.hint": "Thử đổi bộ lọc hoặc từ khoá tìm kiếm khác.",
     "community.emptyFiltered.reset": "Xem tất cả bài viết",
     "community.sidebar.topicsTitle": "Chủ đề nổi bật",
+    "community.sidebar.topic1": "# Thuê trọ sinh viên — 128 bài viết",
+    "community.sidebar.topic2": "# Phòng trọ Quận 7 — 96 bài viết",
+    "community.sidebar.topic3": "# Kinh nghiệm thuê trọ — 75 bài viết",
+    "community.sidebar.topic4": "# Hợp đồng thuê nhà — 60 bài viết",
+    "community.sidebar.topic5": "# Cảnh báo lừa đảo — 42 bài viết",
     "community.sidebar.rulesTitle": "Nội quy cộng đồng",
     "community.sidebar.rule1": "Tôn trọng, không công kích cá nhân trong bình luận.",
     "community.sidebar.rule2": "Không đăng nội dung quảng cáo, spam trái chủ đề.",
@@ -432,10 +439,10 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "admin.pending.criteria.noIllegal": "Không vi phạm pháp luật",
     "admin.pending.criteria.noSpam": "Không trùng lặp/spam",
 
-    // admin: /admin/community (kiểm duyệt cộng đồng - backend thật)
+    // admin: /admin/community (kiểm duyệt cộng đồng - prototype, state cục bộ)
     "admin.community.title": "Kiểm duyệt cộng đồng",
     "admin.community.prototypeNote":
-      "Duyệt/Ẩn/Từ chối cập nhật trạng thái bài viết thật trong cơ sở dữ liệu. Bình luận vẫn là dữ liệu mẫu minh hoạ, chưa kết nối bảng community_comments.",
+      "Bản demo: Duyệt/Ẩn/Từ chối chỉ đổi trạng thái tạm trên trình duyệt, không ghi vào cơ sở dữ liệu.",
     "admin.community.colPost": "Bài viết",
     "admin.community.colCategory": "Danh mục",
     "admin.community.colDate": "Ngày đăng",
@@ -599,14 +606,16 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "review.criteria.gia_hop_ly": "Fair price",
     "dashboard.tenant.myReviewsEmpty": "You haven't written any reviews yet.",
 
-    // community/blog (Phase 4, Group 3 — prototype, static mock data)
+    // community/blog (prototype/mock — rebuild, see prompt-community-rebuild.txt)
     "community.pageTitle": "Community",
-    "community.category.guide": "Rental guides",
-    "community.category.warning": "Scam warnings",
-    "community.category.roommate": "Reviews",
-    "community.category.finance": "Personal finance",
+    "community.heroSubtitle": "Share, ask, and review to find a better place to live every day.",
+    "community.createPost": "Create post",
+    "community.category.qna": "Q&A",
+    "community.category.review": "Review",
+    "community.category.experience": "Experience",
     "community.categoryAll": "All",
     "community.views": "views",
+    "community.save": "Save",
     "community.commentsTitle": "Comments",
     "community.commentsEmpty": "No comments yet.",
     "community.commentPlaceholder": "Write a comment...",
@@ -623,6 +632,11 @@ export const dictionary: Record<Locale, Record<string, string>> = {
     "community.emptyFiltered.hint": "Try a different filter or search keyword.",
     "community.emptyFiltered.reset": "View all posts",
     "community.sidebar.topicsTitle": "Trending topics",
+    "community.sidebar.topic1": "# Student rentals — 128 posts",
+    "community.sidebar.topic2": "# District 7 rooms — 96 posts",
+    "community.sidebar.topic3": "# Renting experience — 75 posts",
+    "community.sidebar.topic4": "# Lease agreements — 60 posts",
+    "community.sidebar.topic5": "# Scam warnings — 42 posts",
     "community.sidebar.rulesTitle": "Community guidelines",
     "community.sidebar.rule1": "Be respectful — no personal attacks in comments.",
     "community.sidebar.rule2": "No ads or off-topic spam.",
@@ -864,7 +878,7 @@ export const dictionary: Record<Locale, Record<string, string>> = {
 
     "admin.community.title": "Community moderation",
     "admin.community.prototypeNote":
-      "Approve/Hide/Reject update the post's real status in the database. Comments are still mock data, not yet wired to community_comments.",
+      "Demo build: Approve/Hide/Reject only change local browser state, nothing is written to the database.",
     "admin.community.colPost": "Post",
     "admin.community.colCategory": "Category",
     "admin.community.colDate": "Date",

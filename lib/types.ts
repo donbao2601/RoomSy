@@ -73,20 +73,3 @@ export type ReviewWithReviewer = Review & {
   reviewer: { full_name: string | null; avatar_url: string | null } | null;
 };
 
-export type CommunityPostStatus = "pending" | "approved" | "hidden" | "rejected";
-
-export type CommunityPost = {
-  id: string;
-  user_id: string;
-  title: string;
-  content: string | null;
-  category: "guide" | "warning" | "roommate" | "finance" | null;
-  thumbnail_url: string | null;
-  view_count: number;
-  status: CommunityPostStatus;
-  created_at: string;
-};
-
-export type CommunityPostWithAuthor = CommunityPost & {
-  author: { full_name: string | null } | null;
-};

@@ -1,0 +1,74 @@
+BỐI CẢNH
+Trang /community và /admin/community của Roomsy (Next.js 14 App Router + Supabase) cần build lại theo spec mới dưới đây. KHÔNG tự ý mở rộng thêm ngoài spec này. Nếu phát hiện điều gì mâu thuẫn với code hiện tại, DỪNG lại và báo cáo trước khi sửa, không tự quyết.
+
+===============================================
+MỤC 1 — REVERT BACKEND VỀ FULL PROTOTYPE/MOCK
+===============================================
+- Trang /community và /admin/community hiện đang đọc dữ liệu thật từ Supabase (bảng community_posts, community_comments) — commit 0080b1e "Community backend integration".
+- Yêu cầu: revert 2 trang này về đọc từ mock data (mảng cứng trong code), giống cách làm ở GĐ4 (roommate/reviews prototype).
+- KHÔNG được xoá bảng community_posts / community_comments trong Supabase. Chỉ ngừng gọi Supabase từ 2 trang này. Bảng + RLS policies giữ nguyên, không đụng tới.
+- Admin moderation (nút duyệt/ẩn bài) chuyển lại thành nút giả (không gọi API thật, chỉ đổi state UI cục bộ hoặc không có tác dụng thật) — đúng tinh thần prototype.
+- KHÔNG chạy bất kỳ lệnh SQL nào (không xoá, không insert, không update DB thật).
+
+===============================================
+MỤC 2 — FILTER CHIP (hàng pill dưới ô tìm kiếm)
+===============================================
+Đổi từ 4 category cứng hiện tại (guide/warning/roommate/finance, hiển thị "Kiến thức thuê trọ/Cảnh báo lừa đảo/Review/Tài chính cá nhân") sang bộ MỚI:
+
+- Tất cả (all)
+- Hỏi đáp (category value gợi ý: "qna")
+- Review (category value: "review")
+- Kinh nghiệm (category value: "experience")
+
+Cập nhật:
+- Mảng CATEGORIES trong components/community/CommunityFeed.tsx (hiện ở dòng 9)
+- Dictionary i18n tương ứng (key dạng community.category.*) cho cả VI và EN — không hard-code text tiếng Việt trong component, giữ đúng pattern i18n hiện tại của repo.
+- Style pill giữ nguyên theo code hiện tại (chip "Tất cả" nền xanh đậm khi active, các chip khác viền nhạt) — không đổi style, chỉ đổi tên + số lượng.
+
+===============================================
+MỤC 3 — SIDEBAR "CHỦ ĐỀ NỔI BẬT"
+===============================================
+Đổi từ 4 mục hiện tại sang 5 mục, dạng hashtag + số bài viết (static/hardcode, không query DB — đúng pattern hiện tại của sidebar này):
+
+1. # Thuê trọ sinh viên — 128 bài viết
+2. # Phòng trọ Quận 7 — 96 bài viết
+3. # Kinh nghiệm thuê trọ — 75 bài viết
+4. # Hợp đồng thuê nhà — 60 bài viết
+5. # Cảnh báo lừa đảo — 42 bài viết
+
+Giữ nguyên 2 block còn lại của sidebar (Nội quy cộng đồng, Liên hệ Admin) — không đổi.
+
+===============================================
+MỤC 4 — NỘI DUNG BÀI VIẾT MOCK (generate mới)
+===============================================
+Generate 5 bài viết mock ngẫu nhiên, đúng format layout tham khảo (đính kèm ảnh riêng ngoài prompt này nếu cần xem lại), gồm:
+- Avatar tròn + tên tác giả (dùng tên Việt đa dạng, KHÔNG lặp lại 1 tên cho tất cả bài như bản cũ)
+- Thời gian đăng (vd "2 giờ trước", "5 giờ trước", "1 ngày trước")
+- Tag category (map đúng theo 1 trong 4 chip ở MỤC 2, màu tag theo category)
+- Tiêu đề + đoạn mô tả ngắn (2-3 dòng)
+- Với bài thuộc category "Review": có thêm rating sao (vd 4.0 ⭐) và 3 ảnh minh hoạ (dùng placeholder image hoặc ảnh có sẵn trong repo)
+- Số lượt like + số bình luận (số ngẫu nhiên hợp lý)
+- Nút "Lưu" ở góc dưới phải mỗi card
+
+===============================================
+MỤC 5 — LAYOUT/STYLE TỔNG THỂ
+===============================================
+- Thêm hero section đầu trang: tiêu đề "Cộng đồng" + mô tả ngắn "Chia sẻ, hỏi đáp và đánh giá để tìm nơi ở tốt hơn mỗi ngày." + minh hoạ người (illustration) bên phải — nếu chưa có asset illustration phù hợp, dùng placeholder hoặc bỏ qua phần ảnh minh hoạ, chỉ giữ text, và báo lại để mình cung cấp asset sau.
+- Nút "Tạo bài viết" nổi bật bên phải ô tìm kiếm (giữ nguyên nếu đã có, chỉ chỉnh style theo tham khảo: nền xanh đậm, icon bút chì).
+- Card bài viết: bo góc, đổ bóng nhẹ, đúng tinh thần thiết kế hiện tại của Roomsy (theo CLAUDE.md + design system).
+
+===============================================
+MỤC 6 — BOTTOM NAV
+===============================================
+Xác nhận lại (không cần sửa nếu đã đúng, chỉ audit): bottom nav của trang /community phải là component local cho riêng trang Cộng đồng, gồm đúng 5 mục:
+Trang chủ / Thuê phòng / Ở ghép / Cộng đồng / Tài khoản
+KHÔNG có mục "Tin nhắn". Nếu code hiện tại có "Tin nhắn" ở đâu đó thuộc phạm vi trang này, xoá nó.
+
+===============================================
+QUY TRÌNH BẮT BUỘC
+===============================================
+1. Đọc code hiện tại trước (CommunityFeed.tsx, /admin/community, i18n dictionary liên quan) — audit read-only, KHÔNG sửa gì cho tới khi báo cáo xong.
+2. Báo cáo ngắn gọn: những gì sẽ đổi, có phát sinh gì ngoài dự kiến không.
+3. Sau khi mình (Danny) xác nhận, mới bắt đầu sửa code.
+4. Sau khi sửa xong: chạy `tsc --noEmit` và `next build`, báo kết quả pass/fail.
+5. KHÔNG tự commit, KHÔNG tự push. Dừng lại để mình review diff và tự chạy git commit/push thủ công.

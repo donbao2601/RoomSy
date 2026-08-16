@@ -6,15 +6,10 @@ import type { CommunityCategory, MockCommunityPost } from "@/lib/mock/community"
 import { t } from "@/lib/i18n/translate";
 import type { Locale } from "@/lib/i18n/locale";
 
-const CATEGORIES: CommunityCategory[] = ["guide", "warning", "roommate", "finance"];
+const CATEGORIES: CommunityCategory[] = ["qna", "review", "experience"];
 type SortOption = "newest" | "popular";
 
-function chipClass(active: boolean, category?: CommunityCategory) {
-  if (category === "warning") {
-    return active
-      ? "bg-warning text-white"
-      : "bg-warning-bg text-warning hover:opacity-90";
-  }
+function chipClass(active: boolean) {
   return active
     ? "bg-primary text-white"
     : "bg-background-soft text-body hover:bg-white";
@@ -70,7 +65,7 @@ export function CommunityFeed({
             key={c}
             type="button"
             onClick={() => setCategory(c)}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium ${chipClass(category === c, c)}`}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium ${chipClass(category === c)}`}
           >
             {t(locale, `community.category.${c}`)}
           </button>
@@ -93,10 +88,19 @@ export function CommunityFeed({
           <option value="newest">{t(locale, "community.sort.newest")}</option>
           <option value="popular">{t(locale, "community.sort.popular")}</option>
         </select>
+        <button
+          type="button"
+          className="flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z" />
+          </svg>
+          {t(locale, "community.createPost")}
+        </button>
       </div>
 
       {results.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="flex flex-col gap-4">
           {results.map((post) => (
             <CommunityPostCard key={post.id} post={post} locale={locale} />
           ))}

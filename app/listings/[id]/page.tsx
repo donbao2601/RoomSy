@@ -190,7 +190,11 @@ export default async function ListingDetailPage({
           )}
 
           <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-line pt-5">
-            <ContactButton phone={owner?.phone ?? null} />
+            <ContactButton
+              phone={owner?.phone ?? null}
+              listingId={listing.id}
+              isAuthenticated={!!currentUser}
+            />
             <FavoriteButton
               listingId={listing.id}
               userId={currentUser?.id ?? null}
